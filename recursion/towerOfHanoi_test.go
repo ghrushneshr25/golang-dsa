@@ -51,7 +51,7 @@ func (testSuite *TowerOfHanoiTestSuite) TestCases() {
 	for _, test := range tests {
 		testSuite.Run(fmt.Sprintf("Running for %v disks", test.disks), func() {
 			toh := NewTowerOfHanoi(test.disks)
-			ExecuteTowerOfHanoi(toh)
+			toh.Execute()
 
 			testSuite.Equalf(test.expectedCount, toh.MoveCount, "expected the count to be equal")
 			testSuite.Equalf(test.expectedMoves, toh.Move, "expected moves are different")
