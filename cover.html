@@ -1,0 +1,1249 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>backtracking: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">golang-dsa/backtracking/generateNCharStringFromK.go (100.0%)</option>
+				
+				<option value="file1">golang-dsa/backtracking/generateNbitString.go (100.0%)</option>
+				
+				<option value="file2">golang-dsa/common/compare.go (92.3%)</option>
+				
+				<option value="file3">golang-dsa/linkedlist/checkCycle.go (100.0%)</option>
+				
+				<option value="file4">golang-dsa/linkedlist/circularLinkedList.go (100.0%)</option>
+				
+				<option value="file5">golang-dsa/linkedlist/doubleLinkedList.go (100.0%)</option>
+				
+				<option value="file6">golang-dsa/linkedlist/findBeginOfLoop.go (100.0%)</option>
+				
+				<option value="file7">golang-dsa/linkedlist/findLengthOfLoop.go (100.0%)</option>
+				
+				<option value="file8">golang-dsa/linkedlist/nthNodeFromEnd.go (100.0%)</option>
+				
+				<option value="file9">golang-dsa/linkedlist/singleLinkedList.go (100.0%)</option>
+				
+				<option value="file10">golang-dsa/linkedlist/unrolledLinkedList.go (96.5%)</option>
+				
+				<option value="file11">golang-dsa/recursion/sortedArray.go (100.0%)</option>
+				
+				<option value="file12">golang-dsa/recursion/towerOfHanoi.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">/*
+        Problem 4: Generate all the strings of length n drawn from 0...k−1
+
+        Using Subtraction and Conquer Master theorem, we get: T(n)= O(݇k^n)
+*/
+
+package backtracking
+
+import (
+        "fmt"
+        "strings"
+)
+
+type NCharStringFromK struct {
+        PoolSize     int // refers to K
+        Length       int
+        Combinations []string
+        Current      []int
+}
+
+func NewNCharStringFromK(poolSize, length int) *NCharStringFromK <span class="cov8" title="1">{
+        field := &amp;NCharStringFromK{}
+        field.PoolSize = poolSize
+        field.Length = length
+        field.Current = make([]int, length)
+        field.Combinations = []string{}
+        return field
+}</span>
+
+func (nchar *NCharStringFromK) Execute() <span class="cov8" title="1">{
+        nchar.Recursion(nchar.Length - 1) // since indexing starts from zero
+}</span>
+
+func (nchar *NCharStringFromK) Recursion(index int) <span class="cov8" title="1">{
+        if index &lt; 0 </span><span class="cov8" title="1">{
+                nchar.generate()
+                return
+        }</span>
+
+        <span class="cov8" title="1">for j := 0; j &lt; nchar.PoolSize; j++ </span><span class="cov8" title="1">{
+                nchar.Current[index] = j
+                nchar.Recursion(index - 1)
+        }</span>
+}
+
+func (nchar *NCharStringFromK) generate() <span class="cov8" title="1">{
+        strs := make([]string, nchar.Length)
+        for i, v := range nchar.Current </span><span class="cov8" title="1">{
+                strs[i] = fmt.Sprintf("%d", v)
+        }</span>
+        <span class="cov8" title="1">result := strings.Join(strs, "")
+        if len(result) &gt; 0 </span><span class="cov8" title="1">{
+                nchar.Combinations = append(nchar.Combinations, result)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">/*
+        Problem 3: Generate all the strings of ݊n bits. Assume A[0...n-1] is an array of size ݊n.
+
+        Using Subtraction and Conquer Master theorem, we get T(n)=O(2^n).
+        This means the algorithm for generating bit-strings is optimal.
+*/
+
+package backtracking
+
+import "strings"
+
+type NBitString struct {
+        Size         int
+        Combinations []string
+        Content      []string
+}
+
+func (nbit *NBitString) Recursion(current int) <span class="cov8" title="1">{
+        if current &lt;= 0 </span><span class="cov8" title="1">{
+                if len(nbit.Content) &gt; 0 </span><span class="cov8" title="1">{
+                        nbit.Combinations = append(nbit.Combinations, strings.Join(nbit.Content, ""))
+                }</span>
+                <span class="cov8" title="1">return</span>
+        }
+        <span class="cov8" title="1">nbit.Content[current-1] = "0"
+        nbit.Recursion(current - 1)
+        nbit.Content[current-1] = "1"
+        nbit.Recursion(current - 1)</span>
+}
+
+func NewNBitString(size int) *NBitString <span class="cov8" title="1">{
+        nbitString := &amp;NBitString{}
+        nbitString.Size = size
+        nbitString.Content = make([]string, size)
+        return nbitString
+}</span>
+
+func (nbit *NBitString) Execute() <span class="cov8" title="1">{
+        nbit.Recursion(nbit.Size)
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package common
+
+func CompareStringArrays(arr1, arr2 []string) bool <span class="cov8" title="1">{
+        if len(arr1) != len(arr2) </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">freq := make(map[string]int)
+        for _, item := range arr1 </span><span class="cov8" title="1">{
+                freq[item]++
+        }</span>
+        <span class="cov8" title="1">for _, item := range arr2 </span><span class="cov8" title="1">{
+                freq[item]--
+                if freq[item] &lt; 0 </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">for _, count := range freq </span><span class="cov8" title="1">{
+                if count != 0 </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">/*
+        Problem-7: Check whether the given linked list is either NULL-terminated or ends in a cycle (cyclic)
+        Problem 8: --------------""-----------------------
+        Problem 9: --------------""-----------------------
+        Problem 10:  ------------""-----------------------
+        Problem 11:  We are given a pointer to the first element of a linked list L.
+                                There are two possibilities for L it either ends (snake) or 
+                                its last element points back to one of the earlier elements in the list (snail). 
+                                Give an algorithm that tests whether a given list is a snake or a snail.
+*/
+
+package linkedlist
+
+type CheckCycle struct {
+        Head   *SingleLinkedList
+        Result bool
+}
+
+func NewCheckCycle(head *SingleLinkedList) *CheckCycle <span class="cov8" title="1">{
+        return &amp;CheckCycle{
+                Head: head,
+        }
+}</span>
+
+func (cc *CheckCycle) Execute(methodName string) <span class="cov8" title="1">{
+        methods := map[string]func() bool{
+                "HashMapMethod":    cc.HashMapMethod,
+                "TwoPointerMethod": cc.TwoPointerMethod,
+        }
+        cc.Result = methods[methodName]()
+}</span>
+
+/*
+        Algorithm:
+                - Traverse the linked list nodes one by one.
+                - Check if the address of the node is available in the hash table or not.
+                - If it is already available in the hash table, that indicates that we are visiting the node that was already visited. This is possible only if
+                        the given linked list has a loop in it.
+                - If the address of the node is not available in the hash table, insert that node’s address into the hash table.
+                - Continue this process until we reach the end of the linked list ݎ݋ we find the loop.
+
+        Time Complexity: O(n) for scanning the linked list
+        Space Complexity: O(n)for hash table.
+*/
+
+func (cc *CheckCycle) HashMapMethod() bool <span class="cov8" title="1">{
+        hashMap := map[*SingleLinkedList]bool{}
+        current := cc.Head
+        for current != nil </span><span class="cov8" title="1">{
+                if _, ok := hashMap[current]; ok </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+                <span class="cov8" title="1">hashMap[current] = true
+                current = current.GetNext()</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (cc *CheckCycle) TwoPointerMethod() bool <span class="cov8" title="1">{
+        fastPtr := cc.Head
+        slowPtr := cc.Head
+
+        for fastPtr != nil &amp;&amp; fastPtr.GetNext() != nil </span><span class="cov8" title="1">{
+                fastPtr = fastPtr.GetNext().GetNext()
+                slowPtr = slowPtr.GetNext()
+                if fastPtr == slowPtr </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package linkedlist
+
+import "fmt"
+
+type CircularLinkedList struct {
+        data int
+        next *CircularLinkedList
+}
+
+func NewCircularLinkedList(data int, next *CircularLinkedList) *CircularLinkedList <span class="cov8" title="1">{
+        return &amp;CircularLinkedList{
+                data: data,
+                next: next,
+        }
+}</span>
+
+func (cll *CircularLinkedList) GetData() int <span class="cov8" title="1">{
+        return cll.data
+}</span>
+
+func (cll *CircularLinkedList) SetData(data int) <span class="cov8" title="1">{
+        cll.data = data
+}</span>
+
+func (cll *CircularLinkedList) GetNext() *CircularLinkedList <span class="cov8" title="1">{
+        return cll.next
+}</span>
+
+func (cll *CircularLinkedList) SetNext(next *CircularLinkedList) <span class="cov8" title="1">{
+        cll.next = next
+}</span>
+
+func GetCircularLinkedListLength(cll *CircularLinkedList) int <span class="cov8" title="1">{
+        length := 0
+        if cll == nil </span><span class="cov8" title="1">{
+                return length
+        }</span>
+        <span class="cov8" title="1">length = 1
+        temp := cll.GetNext()
+        for ; temp != cll; temp = temp.GetNext() </span><span class="cov8" title="1">{
+                length = length + 1
+        }</span>
+        <span class="cov8" title="1">return length</span>
+}
+
+func PrintContentOfCircularLinkedList(cll *CircularLinkedList) (data string) <span class="cov8" title="1">{
+        if cll == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">data = fmt.Sprintf("%v", cll.GetData())
+        temp := cll.GetNext()
+        for temp != cll </span><span class="cov8" title="1">{
+                data = fmt.Sprintf("%v %v", data, temp.GetData())
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">return</span>
+}
+
+func InsertAtEndOfCircularLinkedList(head **CircularLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewCircularLinkedList(data, nil)
+        newNode.SetNext(newNode)
+        if *head == nil </span><span class="cov8" title="1">{
+                *head = newNode
+                return
+        }</span>
+
+        <span class="cov8" title="1">temp := *head
+        for temp.GetNext() != *head </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">temp.SetNext(newNode)
+        newNode.SetNext(*head)</span>
+}
+
+func InsertAtFrontOfCircularLinkedList(head **CircularLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewCircularLinkedList(data, nil)
+        newNode.SetNext(newNode)
+        if *head == nil </span><span class="cov8" title="1">{
+                *head = newNode
+                return
+        }</span>
+        <span class="cov8" title="1">temp := *head
+        for temp.GetNext() != *head </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">temp.SetNext(newNode)
+        newNode.SetNext(*head)
+        *head = newNode</span>
+}
+
+func DeleteLastNodeOfCircularLinkedList(head **CircularLinkedList) <span class="cov8" title="1">{
+        if *head == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">temp := *head
+        if temp.GetNext() == *head </span><span class="cov8" title="1">{
+                *head = nil
+                return
+        }</span>
+
+        <span class="cov8" title="1">for temp.GetNext().GetNext() != *head </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">temp.SetNext(*head)</span>
+}
+
+func DeleteFirstNodeOfCircularLinkedList(head **CircularLinkedList) <span class="cov8" title="1">{
+        if *head == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">temp := *head
+        if temp.GetNext() == *head </span><span class="cov8" title="1">{
+                *head = nil
+                return
+        }</span>
+
+        <span class="cov8" title="1">for temp.GetNext() != *head </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">temp.SetNext((*head).GetNext())
+        *head = (*head).GetNext()</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package linkedlist
+
+type DoubleLinkedList struct {
+        data int
+        next *DoubleLinkedList
+        prev *DoubleLinkedList
+}
+
+func NewDoubleLinkedList(data int, next, prev *DoubleLinkedList) *DoubleLinkedList <span class="cov8" title="1">{
+        return &amp;DoubleLinkedList{
+                data: data,
+                next: next,
+                prev: prev,
+        }
+}</span>
+
+func (dll *DoubleLinkedList) GetData() int <span class="cov8" title="1">{
+        return dll.data
+}</span>
+
+func (dll *DoubleLinkedList) SetData(data int) <span class="cov8" title="1">{
+        dll.data = data
+}</span>
+
+func (dll *DoubleLinkedList) GetPrev() *DoubleLinkedList <span class="cov8" title="1">{
+        return dll.prev
+}</span>
+
+func (dll *DoubleLinkedList) SetPrev(prev *DoubleLinkedList) <span class="cov8" title="1">{
+        dll.prev = prev
+}</span>
+
+func (dll *DoubleLinkedList) GetNext() *DoubleLinkedList <span class="cov8" title="1">{
+        return dll.next
+}</span>
+
+func (dll *DoubleLinkedList) SetNext(next *DoubleLinkedList) <span class="cov8" title="1">{
+        dll.next = next
+}</span>
+
+func GetDoubleLinkedListLength(head *DoubleLinkedList) int <span class="cov8" title="1">{
+        var length int
+
+        temp := head
+        for temp != nil </span><span class="cov8" title="1">{
+                length++
+                temp = temp.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">return length</span>
+}
+
+func InsertAtStartDoubleLL(head **DoubleLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewDoubleLinkedList(data, *head, nil)
+        if *head != nil </span><span class="cov8" title="1">{
+                (*head).SetPrev(newNode)
+        }</span>
+        <span class="cov8" title="1">*head = newNode</span>
+}
+
+func InsertAtEndDoubleLL(head **DoubleLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewDoubleLinkedList(data, nil, nil)
+        if *head == nil </span><span class="cov8" title="1">{
+                *head = newNode
+                return
+        }</span>
+
+        <span class="cov8" title="1">temp := *head
+
+        for temp.GetNext() != nil </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">temp.SetNext(newNode)
+        newNode.SetPrev(temp)</span>
+}
+
+func InsertAtPositionOfDoubleLL(head **DoubleLinkedList, data, position int) <span class="cov8" title="1">{
+        if position == 0 </span><span class="cov8" title="1">{
+                InsertAtStartDoubleLL(head, data)
+                return
+        }</span>
+
+        <span class="cov8" title="1">newNode := NewDoubleLinkedList(data, nil, nil)
+        temp := *head
+
+        for i := 0; i &lt; position-1 &amp;&amp; temp != nil; i++ </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">if temp == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">newNode.SetNext(temp.GetNext())
+        newNode.SetPrev(temp)
+        if temp.GetNext() != nil </span><span class="cov8" title="1">{
+                temp.GetNext().SetPrev(newNode)
+        }</span>
+        <span class="cov8" title="1">temp.SetNext(newNode)</span>
+}
+
+func DeleteAtStartOfDoubleLL(head **DoubleLinkedList) <span class="cov8" title="1">{
+        if *head == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">*head = (*head).GetNext()
+        if *head != nil </span><span class="cov8" title="1">{
+                (*head).SetPrev(nil)
+        }</span>
+}
+
+func DeleteAtEndOfDoubleLL(head **DoubleLinkedList) <span class="cov8" title="1">{
+        if *head == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">temp := *head
+        for temp.GetNext() != nil </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">if temp.GetPrev() != nil </span><span class="cov8" title="1">{
+                temp.GetPrev().SetNext(nil)
+        }</span> else<span class="cov8" title="1"> {
+                *head = nil
+        }</span>
+}
+
+func DeleteAtPositionOfDoubleLL(head **DoubleLinkedList, position int) <span class="cov8" title="1">{
+        if position == 0 </span><span class="cov8" title="1">{
+                DeleteAtStartOfDoubleLL(head)
+                return
+        }</span>
+
+        <span class="cov8" title="1">temp := *head
+        for i := 0; i &lt; position &amp;&amp; temp != nil; i++ </span><span class="cov8" title="1">{
+                temp = temp.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">if temp == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">if temp.GetPrev() != nil </span><span class="cov8" title="1">{
+                temp.GetPrev().SetNext(temp.GetNext())
+        }</span>
+        <span class="cov8" title="1">if temp.GetNext() != nil </span><span class="cov8" title="1">{
+                temp.GetNext().SetPrev(temp.GetPrev())
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">/*
+        Problem 12: Check whether the given linked list is NULL-terminated or not.
+                                If there is a cycle find the start node of the loop.
+*/
+
+package linkedlist
+
+type FindBeginOfLoop struct {
+        Head   *SingleLinkedList
+        Result int
+}
+
+func NewFindBeginOfLoop(head *SingleLinkedList) *FindBeginOfLoop <span class="cov8" title="1">{
+        return &amp;FindBeginOfLoop{
+                Head: head,
+        }
+}</span>
+
+/*
+        Time Complexity: O(n).
+        Space Complexity: O(1).
+*/
+
+func (fbl *FindBeginOfLoop) FloydCycle() int <span class="cov8" title="1">{
+        fastPtr := fbl.Head
+        slowPtr := fbl.Head
+        var loopExists bool
+        for fastPtr != nil &amp;&amp; fastPtr.GetNext() != nil </span><span class="cov8" title="1">{
+                fastPtr = fastPtr.GetNext().GetNext()
+                slowPtr = slowPtr.GetNext()
+                if fastPtr == slowPtr </span><span class="cov8" title="1">{
+                        loopExists = true
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if loopExists </span><span class="cov8" title="1">{
+                slowPtr = fbl.Head
+                for slowPtr != fastPtr </span><span class="cov8" title="1">{
+                        slowPtr = slowPtr.GetNext()
+                        fastPtr = fastPtr.GetNext()
+                }</span>
+                <span class="cov8" title="1">return slowPtr.GetData()</span>
+        }
+        <span class="cov8" title="1">return -1</span>
+}
+
+func (fbl *FindBeginOfLoop) Execute() <span class="cov8" title="1">{
+        fbl.Result = fbl.FloydCycle()
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">/*
+        Problem 15: Check whether the given linked list is NULL-terminated.
+                                If there is a cycle, find the length of the loop.
+*/
+
+package linkedlist
+
+type FindLengthOfLoop struct {
+        Head   *SingleLinkedList
+        Result int
+}
+
+func NewFindLengthOfLoop(head *SingleLinkedList) *FindLengthOfLoop <span class="cov8" title="1">{
+        return &amp;FindLengthOfLoop{
+                Head: head,
+        }
+}</span>
+
+func (fll *FindLengthOfLoop) FloydCycle() int <span class="cov8" title="1">{
+        fastPtr := fll.Head
+        slowPtr := fll.Head
+        var loopExists bool
+        for fastPtr != nil &amp;&amp; fastPtr.GetNext() != nil </span><span class="cov8" title="1">{
+                fastPtr = fastPtr.GetNext().GetNext()
+                slowPtr = slowPtr.GetNext()
+                if fastPtr == slowPtr </span><span class="cov8" title="1">{
+                        loopExists = true
+                        break</span>
+                }
+        }
+        <span class="cov8" title="1">if loopExists </span><span class="cov8" title="1">{
+                count := 1
+                fastPtr = fastPtr.GetNext()
+                for slowPtr != fastPtr </span><span class="cov8" title="1">{
+                        fastPtr = fastPtr.GetNext()
+                        count++
+                }</span>
+                <span class="cov8" title="1">return count</span>
+        }
+        <span class="cov8" title="1">return -1</span>
+}
+
+func (fll *FindLengthOfLoop) Execute() <span class="cov8" title="1">{
+        fll.Result = fll.FloydCycle()
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">/*
+Problem 2: Find nth node from the end of a Linked List.
+*/
+package linkedlist
+
+type NthNodeFromEnd struct {
+        Head   *SingleLinkedList
+        Result int
+        N      int
+}
+
+func NewNthNodeFromEnd(values []int, n int) *NthNodeFromEnd <span class="cov8" title="1">{
+        nthNodeFromEnd := &amp;NthNodeFromEnd{}
+        for _, value := range values </span><span class="cov8" title="1">{
+                InsertAtEndofSingleLL(&amp;nthNodeFromEnd.Head, value)
+        }</span>
+        <span class="cov8" title="1">nthNodeFromEnd.N = n
+        return nthNodeFromEnd</span>
+}
+
+func (nnfe *NthNodeFromEnd) Execute(methodName string) <span class="cov8" title="1">{
+        methods := map[string]func() int{
+                "BruteForceMethod": nnfe.BruteForceMethod,
+                "HashMapMethod":    nnfe.HashMapMethod,
+                "TwoPointerMethod": nnfe.TwoPointerMethod,
+                "RecursionMethod":  nnfe.RecursionMethod,
+        }
+        nnfe.Result = methods[methodName]()
+}</span>
+
+func (nnfe *NthNodeFromEnd) BruteForceMethod() int <span class="cov8" title="1">{
+        /*
+                Time Complexity: O(n^2).
+                For scanning the remaining list (from current node) for each node.
+                Space Complexity: O(1).
+        */
+        current := nnfe.Head
+        len := GetSingleLinkedListLength(current)
+        if len &lt; nnfe.N </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">for current.GetNext() != nil &amp;&amp; len &gt; nnfe.N </span><span class="cov8" title="1">{
+                current = current.GetNext()
+                len = GetSingleLinkedListLength(current)
+        }</span>
+        <span class="cov8" title="1">if len == nnfe.N </span><span class="cov8" title="1">{
+                return current.GetData()
+        }</span>
+        <span class="cov8" title="1">return -1</span>
+}
+
+func (nnfe *NthNodeFromEnd) HashMapMethod() int <span class="cov8" title="1">{
+        /*
+                M =&gt; Length of the linked list.
+                Time Complexity: T(M) = O(M) Time for creating the hash table.
+                Space Complexity: O(M) for hash table of size
+        */
+        len := GetSingleLinkedListLength(nnfe.Head)
+        if len &lt; nnfe.N </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">hashMap := map[int]*SingleLinkedList{}
+        current := nnfe.Head
+        currentPosition := 1
+        for current != nil </span><span class="cov8" title="1">{
+                hashMap[currentPosition] = current
+                current = current.GetNext()
+                currentPosition++
+        }</span>
+        <span class="cov8" title="1">if val, ok := hashMap[len-nnfe.N+1]; ok </span><span class="cov8" title="1">{
+                return val.GetData()
+        }</span>
+        <span class="cov8" title="1">return -1</span>
+}
+
+func (nnfe *NthNodeFromEnd) TwoPointerMethod() int <span class="cov8" title="1">{
+        /*
+                Time Complexity: O(n)
+                Space Complexity: O(1)
+        */
+
+        if nnfe.N &lt; 0 </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">var pTemp, pNthNode *SingleLinkedList
+        pTemp = nnfe.Head
+        for i := 1; i &lt; nnfe.N &amp;&amp; pTemp != nil; i++ </span><span class="cov8" title="1">{
+                pTemp = pTemp.GetNext()
+        }</span>
+        <span class="cov8" title="1">if pTemp == nil </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">pNthNode = nnfe.Head
+        for pTemp.GetNext() != nil </span><span class="cov8" title="1">{
+                pTemp = pTemp.GetNext()
+                pNthNode = pNthNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">return pNthNode.GetData()</span>
+}
+
+func (nnfe *NthNodeFromEnd) RecursionMethod() int <span class="cov8" title="1">{
+        /*
+                Time Complexity: O(n) for pre recursive calls and O(n) for post recursive calls, which is =&gt; O(2n) = O(n).
+                Space Complexity: O(n) for recursive stack.
+        */
+        counter := 0
+        node := nnfe.recursionLogic(nnfe.Head, nnfe.N, &amp;counter)
+        if node == nil </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">return node.GetData()</span>
+}
+
+func (nnfe *NthNodeFromEnd) recursionLogic(head *SingleLinkedList, n int, counter *int) *SingleLinkedList <span class="cov8" title="1">{
+        if head != nil </span><span class="cov8" title="1">{
+                result := nnfe.recursionLogic(head.GetNext(), n, counter)
+                (*counter)++
+                if n == *counter </span><span class="cov8" title="1">{
+                        return head
+                }</span>
+                <span class="cov8" title="1">return result</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package linkedlist
+
+type SingleLinkedList struct {
+        data     int
+        nextNode *SingleLinkedList
+}
+
+func NewSingleLinkedList(data int) *SingleLinkedList <span class="cov8" title="1">{
+        return &amp;SingleLinkedList{
+                data: data,
+        }
+}</span>
+
+func (sll *SingleLinkedList) SetData(data int) <span class="cov8" title="1">{
+        sll.data = data
+}</span>
+
+func (sll *SingleLinkedList) GetData() int <span class="cov8" title="1">{
+        return sll.data
+}</span>
+
+func (sll *SingleLinkedList) SetNext(nextNode *SingleLinkedList) <span class="cov8" title="1">{
+        sll.nextNode = nextNode
+}</span>
+
+func (sll *SingleLinkedList) GetNext() *SingleLinkedList <span class="cov8" title="1">{
+        return sll.nextNode
+}</span>
+
+/*
+        Time Complexity: O(n), for scanning the list of size n Space Complexity: O(1), for creating a temporary variable.
+*/
+
+func GetSingleLinkedListLength(head *SingleLinkedList) int <span class="cov8" title="1">{
+        var length int
+        currentNode := head
+        for currentNode != nil </span><span class="cov8" title="1">{
+                length++
+                currentNode = currentNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">return length</span>
+}
+
+func SearchInSingleLL(head *SingleLinkedList, data int) *SingleLinkedList <span class="cov8" title="1">{
+        currentNode := head
+        for currentNode != nil </span><span class="cov8" title="1">{
+                if currentNode.GetData() == data </span><span class="cov8" title="1">{
+                        return currentNode
+                }</span>
+                <span class="cov8" title="1">currentNode = currentNode.GetNext()</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func InsertAtStartofSingleLL(head **SingleLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewSingleLinkedList(data)
+        newNode.SetNext(*head)
+        *head = newNode
+}</span>
+
+func InsertAtEndofSingleLL(head **SingleLinkedList, data int) <span class="cov8" title="1">{
+        newNode := NewSingleLinkedList(data)
+        if *head == nil </span><span class="cov8" title="1">{
+                *head = newNode
+                return
+        }</span>
+        <span class="cov8" title="1">currentNode := *head
+        for currentNode.GetNext() != nil </span><span class="cov8" title="1">{
+                currentNode = currentNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">currentNode.SetNext(newNode)</span>
+}
+
+func InsertAtPositionOfSingleLL(head **SingleLinkedList, data, position int) <span class="cov8" title="1">{
+        if position == 0 </span><span class="cov8" title="1">{
+                InsertAtStartofSingleLL(head, data)
+                return
+        }</span>
+
+        <span class="cov8" title="1">newNode := NewSingleLinkedList(data)
+
+        currentNode := *head
+        for i := 0; i &lt; position-1 &amp;&amp; currentNode != nil; i++ </span><span class="cov8" title="1">{
+                currentNode = currentNode.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">if currentNode == nil </span><span class="cov8" title="1">{
+                return // out of range
+        }</span>
+        <span class="cov8" title="1">newNode.SetNext(currentNode.GetNext())
+        currentNode.SetNext(newNode)</span>
+}
+
+func DeleteAtStartOfSingleLL(head **SingleLinkedList) <span class="cov8" title="1">{
+        if *head != nil </span><span class="cov8" title="1">{
+                *head = (*head).GetNext()
+        }</span>
+}
+
+func DeleteAtEndSingleLL(head **SingleLinkedList) <span class="cov8" title="1">{
+        if *head == nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">if (*head).GetNext() == nil </span><span class="cov8" title="1">{
+                *head = nil
+                return
+        }</span>
+        <span class="cov8" title="1">currentNode := *head
+        for currentNode.GetNext().GetNext() != nil </span><span class="cov8" title="1">{
+                currentNode = currentNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">currentNode.SetNext(nil)</span>
+}
+
+func DeleteAtPositionOfSingleLL(head **SingleLinkedList, position int) <span class="cov8" title="1">{
+        if position == 0 </span><span class="cov8" title="1">{
+                DeleteAtStartOfSingleLL(head)
+                return
+        }</span>
+        <span class="cov8" title="1">currentNode := *head
+        for i := 0; i &lt; position-1 &amp;&amp; currentNode != nil; i++ </span><span class="cov8" title="1">{
+                currentNode = currentNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">if currentNode == nil || currentNode.GetNext() == nil </span><span class="cov8" title="1">{
+                return // position is out of bounds
+        }</span>
+        <span class="cov8" title="1">currentNode.SetNext(currentNode.GetNext().GetNext())</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package linkedlist
+
+import "errors"
+
+const MIN_NODE_CAPACITY = 4
+
+type UnrolledLinkedList struct {
+        NodeCapacity int
+        CurrentSize  int
+        FirstNode    *ULLNode
+        LastNode     *ULLNode
+}
+
+type ULLNode struct {
+        Data         []int
+        NextNode     *ULLNode
+        PreviousNode *ULLNode
+        Size         int
+}
+
+func NewUnrolledLinkedList(nodeCapacity int) (ull *UnrolledLinkedList, err error) <span class="cov8" title="1">{
+        if nodeCapacity &lt; MIN_NODE_CAPACITY </span><span class="cov8" title="1">{
+                err = errors.New("node capacity should be greater than min node capacity")
+                return
+        }</span>
+        <span class="cov8" title="1">ull = &amp;UnrolledLinkedList{
+                NodeCapacity: nodeCapacity,
+        }
+
+        firstNode := &amp;ULLNode{
+                Data: make([]int, nodeCapacity),
+        }
+        ull.FirstNode = firstNode
+        ull.LastNode = firstNode
+        return</span>
+}
+
+func (list *UnrolledLinkedList) Size() int <span class="cov8" title="1">{
+        return list.CurrentSize
+}</span>
+
+func (list *UnrolledLinkedList) IsEmpty() bool <span class="cov8" title="1">{
+        return list.CurrentSize == 0
+}</span>
+
+func (list *UnrolledLinkedList) Contains(o int) bool <span class="cov8" title="1">{
+        return list.Search(o) != -1
+}</span>
+
+func (list *UnrolledLinkedList) Add(val int) bool <span class="cov8" title="1">{
+        list.insertIntoNode(list.LastNode, list.LastNode.Size, val)
+        return true
+}</span>
+
+func (list *UnrolledLinkedList) Remove(val int) bool <span class="cov8" title="1">{
+        node := list.FirstNode
+        for node != nil </span><span class="cov8" title="1">{
+                for i := 0; i &lt; node.Size; i++ </span><span class="cov8" title="1">{
+                        if node.Data[i] == val </span><span class="cov8" title="1">{
+                                list.removeFromNode(node, i)
+                                return true
+                        }</span>
+                }
+                <span class="cov8" title="1">node = node.NextNode</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (list *UnrolledLinkedList) Clear() <span class="cov8" title="1">{
+        node := list.FirstNode.NextNode
+        for node != nil </span><span class="cov8" title="1">{
+                next := node.NextNode
+                node.NextNode = nil
+                node.PreviousNode = nil
+                node.Data = nil
+                node = next
+        }</span>
+        <span class="cov8" title="1">list.LastNode = list.FirstNode
+        list.FirstNode.Data = make([]int, list.NodeCapacity)
+        list.FirstNode.Size = 0
+        list.FirstNode.NextNode = nil
+        list.CurrentSize = 0</span>
+}
+
+func (list *UnrolledLinkedList) Get(index int) (int, error) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= list.CurrentSize </span><span class="cov8" title="1">{
+                return 0, errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">node, p := list.findNode(index)
+        return node.Data[index-p], nil</span>
+}
+
+func (list *UnrolledLinkedList) Set(index int, element int) (int, error) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= list.CurrentSize </span><span class="cov8" title="1">{
+                return 0, errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">node, p := list.findNode(index)
+        oldElement := node.Data[index-p]
+        node.Data[index-p] = element
+        return oldElement, nil</span>
+}
+
+func (list *UnrolledLinkedList) AddAt(index int, element int) error <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt; list.CurrentSize </span><span class="cov8" title="1">{
+                return errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">node, p := list.findNode(index)
+        list.insertIntoNode(node, index-p, element)
+        return nil</span>
+}
+
+func (list *UnrolledLinkedList) RemoveAt(index int) (int, error) <span class="cov8" title="1">{
+        if index &lt; 0 || index &gt;= list.CurrentSize </span><span class="cov8" title="1">{
+                return 0, errors.New("index out of bounds")
+        }</span>
+        <span class="cov8" title="1">node, p := list.findNode(index)
+        element := node.Data[index-p]
+        list.removeFromNode(node, index-p)
+        return element, nil</span>
+}
+
+func (list *UnrolledLinkedList) findNode(index int) (*ULLNode, int) <span class="cov8" title="1">{
+        node := list.FirstNode
+        p := 0
+        if list.CurrentSize-index &gt; index </span><span class="cov8" title="1">{
+                for p &lt;= index-node.Size </span><span class="cov8" title="1">{
+                        p += node.Size
+                        node = node.NextNode
+                }</span>
+        } else<span class="cov8" title="1"> {
+                node = list.LastNode
+                p = list.CurrentSize
+                for p -= node.Size; p &gt; index; </span><span class="cov0" title="0">{
+                        node = node.PreviousNode
+                }</span>
+        }
+        <span class="cov8" title="1">return node, p</span>
+}
+
+func (list *UnrolledLinkedList) insertIntoNode(node *ULLNode, ptr int, element int) <span class="cov8" title="1">{
+        if node.Size == list.NodeCapacity </span><span class="cov8" title="1">{
+                newNode := &amp;ULLNode{
+                        Data: make([]int, list.NodeCapacity),
+                }
+                elementsToMove := list.NodeCapacity / 2
+                startIndex := list.NodeCapacity - elementsToMove
+                copy(newNode.Data, node.Data[startIndex:])
+                for i := startIndex; i &lt; list.NodeCapacity; i++ </span><span class="cov8" title="1">{
+                        node.Data[i] = 0
+                }</span>
+                <span class="cov8" title="1">node.Size -= elementsToMove
+                newNode.Size = elementsToMove
+                newNode.NextNode = node.NextNode
+                newNode.PreviousNode = node
+                if node.NextNode != nil </span><span class="cov0" title="0">{
+                        node.NextNode.PreviousNode = newNode
+                }</span>
+                <span class="cov8" title="1">node.NextNode = newNode
+                if node == list.LastNode </span><span class="cov8" title="1">{
+                        list.LastNode = newNode
+                }</span>
+                <span class="cov8" title="1">if ptr &gt; node.Size </span><span class="cov8" title="1">{
+                        node = newNode
+                        ptr -= node.Size
+                }</span>
+        }
+        <span class="cov8" title="1">copy(node.Data[ptr+1:], node.Data[ptr:node.Size])
+        node.Data[ptr] = element
+        node.Size++
+        list.CurrentSize++</span>
+}
+
+func (list *UnrolledLinkedList) removeFromNode(node *ULLNode, ptr int) <span class="cov8" title="1">{
+        copy(node.Data[ptr:], node.Data[ptr+1:node.Size])
+        node.Data[node.Size-1] = 0
+        node.Size--
+        if node.NextNode != nil &amp;&amp; node.NextNode.Size+node.Size &lt;= list.NodeCapacity </span><span class="cov8" title="1">{
+                list.mergeWithNextNode(node)
+        }</span> else<span class="cov8" title="1"> if node.PreviousNode != nil &amp;&amp; node.PreviousNode.Size+node.Size &lt;= list.NodeCapacity </span><span class="cov0" title="0">{
+                list.mergeWithNextNode(node.PreviousNode)
+        }</span>
+        <span class="cov8" title="1">list.CurrentSize--</span>
+}
+
+func (list *UnrolledLinkedList) mergeWithNextNode(node *ULLNode) <span class="cov8" title="1">{
+        next := node.NextNode
+        copy(node.Data[node.Size:], next.Data[:next.Size])
+        node.Size += next.Size
+        if next.NextNode != nil </span><span class="cov8" title="1">{
+                next.NextNode.PreviousNode = node
+        }</span>
+        <span class="cov8" title="1">node.NextNode = next.NextNode
+        if next == list.LastNode </span><span class="cov0" title="0">{
+                list.LastNode = node
+        }</span>
+}
+
+func (list *UnrolledLinkedList) Search(o int) int <span class="cov8" title="1">{
+        node := list.FirstNode
+        index := 0
+        for node != nil </span><span class="cov8" title="1">{
+                for i := 0; i &lt; node.Size; i++ </span><span class="cov8" title="1">{
+                        if node.Data[i] == o </span><span class="cov8" title="1">{
+                                return index + i
+                        }</span>
+                }
+                <span class="cov8" title="1">index += node.Size
+                node = node.NextNode</span>
+        }
+        <span class="cov8" title="1">return -1</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">/*
+        Problem-2: Given an array, check whether the array is in sorted order with recursion.
+
+        Time Complexity: O(n). Space Complexity: O(݊n) for recursive stack space
+*/
+
+package recursion
+
+type SortedArray struct {
+        Array  []int
+        Result bool
+}
+
+func (soa *SortedArray) Recursion(index int) bool <span class="cov8" title="1">{
+        if len(soa.Array) == 1 || index == 1 </span><span class="cov8" title="1">{
+                return true
+        }</span>
+
+        <span class="cov8" title="1">if soa.Array[index-1] &lt; soa.Array[index-2] </span><span class="cov8" title="1">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">return soa.Recursion(index - 1)</span>
+}
+
+func NewSortedArray(array []int) *SortedArray <span class="cov8" title="1">{
+        return &amp;SortedArray{
+                Array: array,
+        }
+}</span>
+
+func (soa *SortedArray) Execute() <span class="cov8" title="1">{
+        soa.Result = soa.Recursion(len(soa.Array))
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">/*
+Problem-1 Discuss Towers of Hanoi puzzle.
+  - Only one disk can be moved at a time.
+  - Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack i.e. a disk can only be moved if it is the uppermost disk on a stack.
+  - No disk may be placed on top of a smaller disk.
+
+It comprises three main recursive steps:
+ 1. Shift disks from the source rod to an auxiliary rod.
+ 2. Move the remaining disk to the target rod.
+ 3. Shift the disks from the auxiliary rod to the target rod.
+*/
+package recursion
+
+import (
+        "fmt"
+)
+
+type TowerOfHanoi struct {
+        MoveCount     int
+        NumberOfDisks int
+        Move          []string
+}
+
+func (toh *TowerOfHanoi) Recursion(current int, from, to, aux string) <span class="cov8" title="1">{
+        if current == 1 </span><span class="cov8" title="1">{
+                toh.MoveCount++
+                toh.Move = append(toh.Move, fmt.Sprintf("%v -&gt; %v", from, to)) // Only 1 disk move directly
+                return
+        }</span>
+
+        <span class="cov8" title="1">toh.Recursion(current-1, from, aux, to)
+        toh.MoveCount++
+        toh.Move = append(toh.Move, fmt.Sprintf("%v -&gt; %v", from, to))
+        toh.Recursion(current-1, aux, to, from)</span>
+}
+
+func NewTowerOfHanoi(numberOfDisks int) *TowerOfHanoi <span class="cov8" title="1">{
+        return &amp;TowerOfHanoi{
+                NumberOfDisks: numberOfDisks,
+                Move:          []string{},
+        }
+}</span>
+
+func (toh *TowerOfHanoi) Execute() <span class="cov8" title="1">{
+        toh.Recursion(toh.NumberOfDisks, "A", "C", "B")
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

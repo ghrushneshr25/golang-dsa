@@ -33,14 +33,23 @@ func (sll *SingleLinkedList) GetNext() *SingleLinkedList {
 
 func GetSingleLinkedListLength(head *SingleLinkedList) int {
 	var length int
-
 	currentNode := head
-	for currentNode.GetNext() != nil {
+	for currentNode != nil {
 		length++
 		currentNode = currentNode.GetNext()
 	}
-
 	return length
+}
+
+func SearchInSingleLL(head *SingleLinkedList, data int) *SingleLinkedList {
+	currentNode := head
+	for currentNode != nil {
+		if currentNode.GetData() == data {
+			return currentNode
+		}
+		currentNode = currentNode.GetNext()
+	}
+	return nil
 }
 
 func InsertAtStartofSingleLL(head **SingleLinkedList, data int) {
@@ -71,7 +80,7 @@ func InsertAtPositionOfSingleLL(head **SingleLinkedList, data, position int) {
 	newNode := NewSingleLinkedList(data)
 
 	currentNode := *head
-	for i := 0; i < position && currentNode != nil; i++ {
+	for i := 0; i < position-1 && currentNode != nil; i++ {
 		currentNode = currentNode.GetNext()
 	}
 

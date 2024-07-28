@@ -42,7 +42,7 @@ func GetDoubleLinkedListLength(head *DoubleLinkedList) int {
 	var length int
 
 	temp := head
-	for temp.GetNext() != nil {
+	for temp != nil {
 		length++
 		temp = temp.GetNext()
 	}
