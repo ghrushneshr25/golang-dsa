@@ -126,3 +126,21 @@ func DeleteAtPositionOfSingleLL(head **SingleLinkedList, position int) {
 	}
 	currentNode.SetNext(currentNode.GetNext().GetNext())
 }
+
+func ConvertArrayToSingleLinkedList(val []int) *SingleLinkedList {
+	var head *SingleLinkedList
+	for i := len(val) - 1; i >= 0; i-- {
+		InsertAtStartofSingleLL(&head, val[i])
+	}
+	return head
+}
+
+func ConvertSingleLinkedListToArray(head *SingleLinkedList) []int {
+	result := []int{}
+	currentNode := head
+	for currentNode != nil {
+		result = append(result, currentNode.GetData())
+		currentNode = currentNode.GetNext()
+	}
+	return result
+}

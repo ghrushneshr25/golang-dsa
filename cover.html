@@ -71,15 +71,29 @@
 				
 				<option value="file7">golang-dsa/linkedlist/findLengthOfLoop.go (100.0%)</option>
 				
-				<option value="file8">golang-dsa/linkedlist/nthNodeFromEnd.go (100.0%)</option>
+				<option value="file8">golang-dsa/linkedlist/insertANodeInSortedLL.go (100.0%)</option>
 				
-				<option value="file9">golang-dsa/linkedlist/singleLinkedList.go (100.0%)</option>
+				<option value="file9">golang-dsa/linkedlist/intersectionOfTwoLinkedList.go (100.0%)</option>
 				
-				<option value="file10">golang-dsa/linkedlist/unrolledLinkedList.go (96.5%)</option>
+				<option value="file10">golang-dsa/linkedlist/isLinkedListEven.go (100.0%)</option>
 				
-				<option value="file11">golang-dsa/recursion/sortedArray.go (100.0%)</option>
+				<option value="file11">golang-dsa/linkedlist/mergeTwoSortedLinkedList.go (100.0%)</option>
 				
-				<option value="file12">golang-dsa/recursion/towerOfHanoi.go (100.0%)</option>
+				<option value="file12">golang-dsa/linkedlist/middleOfLinkedList.go (100.0%)</option>
+				
+				<option value="file13">golang-dsa/linkedlist/nthNodeFromEnd.go (100.0%)</option>
+				
+				<option value="file14">golang-dsa/linkedlist/reverseLinkedListInPairs.go (100.0%)</option>
+				
+				<option value="file15">golang-dsa/linkedlist/reverseSingleLinkedList.go (100.0%)</option>
+				
+				<option value="file16">golang-dsa/linkedlist/singleLinkedList.go (100.0%)</option>
+				
+				<option value="file17">golang-dsa/linkedlist/unrolledLinkedList.go (96.5%)</option>
+				
+				<option value="file18">golang-dsa/recursion/sortedArray.go (100.0%)</option>
+				
+				<option value="file19">golang-dsa/recursion/towerOfHanoi.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -665,6 +679,341 @@ func (fll *FindLengthOfLoop) Execute() <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file8" style="display: none">/*
+        Problem 16: Insert a node in a sorted linked list
+*/
+
+package linkedlist
+
+type InsertANodeInSortedLL struct {
+        Head   *SingleLinkedList
+        Result []int
+}
+
+func NewInsertANodeInSortedLL(head *SingleLinkedList) *InsertANodeInSortedLL <span class="cov8" title="1">{
+        return &amp;InsertANodeInSortedLL{
+                Head: head,
+        }
+}</span>
+
+/*
+        Time Complexity: O(N)
+        Space Complexity: O(1)
+*/
+
+func (sll *InsertANodeInSortedLL) InsertNode(data int) <span class="cov8" title="1">{
+        newNode := NewSingleLinkedList(data)
+
+        if sll.Head == nil </span><span class="cov8" title="1">{
+                sll.Head = newNode
+                return
+        }</span>
+
+        <span class="cov8" title="1">current := sll.Head
+        var temp *SingleLinkedList
+        for current != nil &amp;&amp; current.GetData() &lt; data </span><span class="cov8" title="1">{
+                temp = current
+                current = current.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">newNode.SetNext(current)
+        if temp != nil </span><span class="cov8" title="1">{
+                temp.SetNext(newNode)
+        }</span> else<span class="cov8" title="1"> {
+                sll.Head = newNode
+        }</span>
+}
+
+func (sll *InsertANodeInSortedLL) Execute(data int) <span class="cov8" title="1">{
+        sll.InsertNode(data)
+        sll.Result = []int{}
+        current := sll.Head
+        for current != nil </span><span class="cov8" title="1">{
+                sll.Result = append(sll.Result, current.GetData())
+                current = current.GetNext()
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package linkedlist
+
+type IntersectionOfTwoLinkedList struct {
+        headOne *SingleLinkedList
+        headTwo *SingleLinkedList
+        Result  int
+}
+
+func NewIntersectionOfTwoLinkedList(headOne, headTwo *SingleLinkedList) *IntersectionOfTwoLinkedList <span class="cov8" title="1">{
+        return &amp;IntersectionOfTwoLinkedList{
+                headOne: headOne,
+                headTwo: headTwo,
+                Result:  -1,
+        }
+}</span>
+
+func (i2ll *IntersectionOfTwoLinkedList) BruteForceMethod() *SingleLinkedList <span class="cov8" title="1">{
+        for headOne := i2ll.headOne; headOne != nil; headOne = headOne.GetNext() </span><span class="cov8" title="1">{
+                for headTwo := i2ll.headTwo; headTwo != nil; headTwo = headTwo.GetNext() </span><span class="cov8" title="1">{
+                        if headOne == headTwo </span><span class="cov8" title="1">{
+                                return headOne
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (i2ll *IntersectionOfTwoLinkedList) StackMethod() *SingleLinkedList <span class="cov8" title="1">{
+        stack1 := []*SingleLinkedList{}
+        stack2 := []*SingleLinkedList{}
+
+        for headOne := i2ll.headOne; headOne != nil; headOne = headOne.GetNext() </span><span class="cov8" title="1">{
+                stack1 = append([]*SingleLinkedList{headOne}, stack1...)
+        }</span>
+
+        <span class="cov8" title="1">for headTwo := i2ll.headTwo; headTwo != nil; headTwo = headTwo.GetNext() </span><span class="cov8" title="1">{
+                stack2 = append([]*SingleLinkedList{headTwo}, stack2...)
+        }</span>
+
+        <span class="cov8" title="1">for i := 0; i &lt; len(stack1) &amp;&amp; i &lt; len(stack2); i++ </span><span class="cov8" title="1">{
+                if stack1[i] != stack2[i] </span><span class="cov8" title="1">{
+                        if i == 0 </span><span class="cov8" title="1">{
+                                return nil
+                        }</span>
+                        <span class="cov8" title="1">return stack1[i-1]</span>
+                }
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (i2ll *IntersectionOfTwoLinkedList) TwoPointerMethod() *SingleLinkedList <span class="cov8" title="1">{
+        var len1, len2, diff int
+        currentOne, currentTwo := i2ll.headOne, i2ll.headTwo
+
+        for currentOne != nil </span><span class="cov8" title="1">{
+                len1++
+                currentOne = currentOne.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">for currentTwo != nil </span><span class="cov8" title="1">{
+                len2++
+                currentTwo = currentTwo.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">if len2 &gt; len1 </span><span class="cov8" title="1">{
+                currentOne, currentTwo = i2ll.headTwo, i2ll.headOne
+                diff = len2 - len1
+        }</span> else<span class="cov8" title="1"> {
+                currentOne, currentTwo = i2ll.headOne, i2ll.headTwo
+                diff = len1 - len2
+        }</span>
+
+        <span class="cov8" title="1">for i := 0; i &lt; diff; i++ </span><span class="cov8" title="1">{
+                currentOne = currentOne.GetNext()
+        }</span>
+
+        <span class="cov8" title="1">for currentOne != nil &amp;&amp; currentTwo != nil </span><span class="cov8" title="1">{
+                if currentOne == currentTwo </span><span class="cov8" title="1">{
+                        return currentOne
+                }</span>
+                <span class="cov8" title="1">currentOne = currentOne.GetNext()
+                currentTwo = currentTwo.GetNext()</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (i2ll *IntersectionOfTwoLinkedList) ExecuteByName(methodName string) <span class="cov8" title="1">{
+        methods := map[string]func() *SingleLinkedList{
+                "BruteForceMethod": i2ll.BruteForceMethod,
+                "StackMethod":      i2ll.StackMethod,
+                "TwoPointerMethod": i2ll.TwoPointerMethod,
+        }
+
+        result := methods[methodName]()
+        if result != nil </span><span class="cov8" title="1">{
+                i2ll.Result = result.GetData()
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package linkedlist
+
+type IsLinkedListEven struct {
+        Head   *SingleLinkedList
+        Result bool
+}
+
+func NewIsLinkedListEven(head *SingleLinkedList) *IsLinkedListEven <span class="cov8" title="1">{
+        return &amp;IsLinkedListEven{Head: head}
+}</span>
+
+func (ille *IsLinkedListEven) TwoPointerMethod() bool <span class="cov8" title="1">{
+        slow := ille.Head
+        fast := ille.Head
+
+        for fast != nil &amp;&amp; fast.GetNext() != nil </span><span class="cov8" title="1">{
+                fast = fast.GetNext().GetNext()
+                slow = slow.GetNext()
+        }</span>
+        <span class="cov8" title="1">return fast == nil</span>
+}
+
+func (ille *IsLinkedListEven) Execute() <span class="cov8" title="1">{
+        ille.Result = ille.TwoPointerMethod()
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package linkedlist
+
+type MergeTwoSortedLinkedList struct {
+        headOne    *SingleLinkedList
+        headTwo    *SingleLinkedList
+        mergedHead *SingleLinkedList
+        Result     []int
+}
+
+func NewMergeTwoSortedLinkedList(headOne, headTwo *SingleLinkedList) *MergeTwoSortedLinkedList <span class="cov8" title="1">{
+        return &amp;MergeTwoSortedLinkedList{
+                headOne: headOne,
+                headTwo: headTwo,
+        }
+}</span>
+
+func (mtsll *MergeTwoSortedLinkedList) recursion(headOne, headTwo *SingleLinkedList) *SingleLinkedList <span class="cov8" title="1">{
+        if headOne == nil </span><span class="cov8" title="1">{
+                return headTwo
+        }</span>
+        <span class="cov8" title="1">if headTwo == nil </span><span class="cov8" title="1">{
+                return headOne
+        }</span>
+        <span class="cov8" title="1">var head *SingleLinkedList
+        if headOne.GetData() &lt; headTwo.GetData() </span><span class="cov8" title="1">{
+                head = headOne
+                head.SetNext(mtsll.recursion(headOne.GetNext(), headTwo))
+        }</span> else<span class="cov8" title="1"> {
+                head = headTwo
+                head.SetNext(mtsll.recursion(headOne, headTwo.GetNext()))
+        }</span>
+        <span class="cov8" title="1">return head</span>
+}
+
+func (mtsll *MergeTwoSortedLinkedList) RecursionMethod() <span class="cov8" title="1">{
+        mtsll.mergedHead = mtsll.recursion(mtsll.headOne, mtsll.headTwo)
+}</span>
+
+func (mtsll *MergeTwoSortedLinkedList) IterativeMethod() <span class="cov8" title="1">{
+        head := &amp;SingleLinkedList{}
+        current := head
+
+        for mtsll.headOne != nil &amp;&amp; mtsll.headTwo != nil </span><span class="cov8" title="1">{
+                if mtsll.headOne.GetData() &lt; mtsll.headTwo.GetData() </span><span class="cov8" title="1">{
+                        current.SetNext(mtsll.headOne)
+                        mtsll.headOne = mtsll.headOne.GetNext()
+                }</span> else<span class="cov8" title="1"> {
+                        current.SetNext(mtsll.headTwo)
+                        mtsll.headTwo = mtsll.headTwo.GetNext()
+                }</span>
+                <span class="cov8" title="1">current = current.GetNext()</span>
+        }
+
+        <span class="cov8" title="1">if mtsll.headOne != nil </span><span class="cov8" title="1">{
+                current.SetNext(mtsll.headOne)
+        }</span> else<span class="cov8" title="1"> if mtsll.headTwo != nil </span><span class="cov8" title="1">{
+                current.SetNext(mtsll.headTwo)
+        }</span>
+        <span class="cov8" title="1">mtsll.mergedHead = head.GetNext()</span>
+}
+
+func (mtsll *MergeTwoSortedLinkedList) ExecuteByMethodName(method string) <span class="cov8" title="1">{
+        switch method </span>{
+        case "RecursionMethod":<span class="cov8" title="1">
+                mtsll.RecursionMethod()</span>
+        case "IterativeMethod":<span class="cov8" title="1">
+                mtsll.IterativeMethod()</span>
+        }
+        <span class="cov8" title="1">mtsll.Result = ConvertSingleLinkedListToArray(mtsll.mergedHead)</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package linkedlist
+
+type MiddleOfLinkedList struct {
+        Head   *SingleLinkedList
+        Result int
+}
+
+func NewMiddleOfLinkedList(head *SingleLinkedList) *MiddleOfLinkedList <span class="cov8" title="1">{
+        return &amp;MiddleOfLinkedList{Head: head}
+}</span>
+
+func (mll *MiddleOfLinkedList) BruteForceMethod() int <span class="cov8" title="1">{
+        len := GetSingleLinkedListLength(mll.Head)
+        mid := len / 2
+        current := mll.Head
+
+        for current != nil </span><span class="cov8" title="1">{
+                currentLength := GetSingleLinkedListLength(current)
+                if currentLength == len-mid </span><span class="cov8" title="1">{
+                        return current.GetData()
+                }</span>
+                <span class="cov8" title="1">current = current.GetNext()</span>
+        }
+        <span class="cov8" title="1">return -1</span>
+}
+
+func (mll *MiddleOfLinkedList) LengthMethod() int <span class="cov8" title="1">{
+        len := GetSingleLinkedListLength(mll.Head)
+        if len == 0 </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">mid := len / 2
+        current := mll.Head
+        for i := 0; i &lt; mid; i++ </span><span class="cov8" title="1">{
+                current = current.GetNext()
+        }</span>
+        <span class="cov8" title="1">return current.GetData()</span>
+}
+
+func (mll *MiddleOfLinkedList) TwoPointerMethod() int <span class="cov8" title="1">{
+        slow := mll.Head
+        fast := mll.Head
+        for fast != nil &amp;&amp; fast.GetNext() != nil </span><span class="cov8" title="1">{
+                fast = fast.GetNext().GetNext()
+                slow = slow.GetNext()
+        }</span>
+        <span class="cov8" title="1">if slow == nil </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">return slow.GetData()</span>
+}
+
+func (mll *MiddleOfLinkedList) HashMapMethod() int <span class="cov8" title="1">{
+        count := 0
+        nodeMap := make(map[int]*SingleLinkedList)
+        current := mll.Head
+
+        for current != nil </span><span class="cov8" title="1">{
+                count++
+                nodeMap[count] = current
+                current = current.GetNext()
+        }</span>
+        <span class="cov8" title="1">if count == 0 </span><span class="cov8" title="1">{
+                return -1
+        }</span>
+        <span class="cov8" title="1">mid := count / 2
+        return nodeMap[mid+1].GetData()</span>
+}
+
+func (mll *MiddleOfLinkedList) ExecuteByMethod(method string) <span class="cov8" title="1">{
+        methods := map[string]func() int{
+                "BruteForceMethod": mll.BruteForceMethod,
+                "LengthMethod":     mll.LengthMethod,
+                "TwoPointerMethod": mll.TwoPointerMethod,
+                "HashMapMethod":    mll.HashMapMethod,
+        }
+        mll.Result = methods[method]()
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">/*
 Problem 2: Find nth node from the end of a Linked List.
 */
 package linkedlist
@@ -790,7 +1139,137 @@ func (nnfe *NthNodeFromEnd) recursionLogic(head *SingleLinkedList, n int, counte
 }
 </pre>
 		
-		<pre class="file" id="file9" style="display: none">package linkedlist
+		<pre class="file" id="file14" style="display: none">package linkedlist
+
+type ReverseLinkedListInPairs struct {
+        Head        *SingleLinkedList
+        ReverseHead *SingleLinkedList
+        Result      []int
+}
+
+func NewReverseLinkedListInPairs(values []int) *ReverseLinkedListInPairs <span class="cov8" title="1">{
+        head := ConvertArrayToSingleLinkedList(values)
+        return &amp;ReverseLinkedListInPairs{
+                Head: head,
+        }
+}</span>
+
+func (rllip *ReverseLinkedListInPairs) RecursiveMethod() <span class="cov8" title="1">{
+        rllip.ReverseHead = rllip.recursion(rllip.Head)
+}</span>
+
+func (rllp *ReverseLinkedListInPairs) recursion(head *SingleLinkedList) *SingleLinkedList <span class="cov8" title="1">{
+        var temp *SingleLinkedList
+        if head == nil || head.GetNext() == nil </span><span class="cov8" title="1">{
+                return head
+        }</span>
+        <span class="cov8" title="1">temp = head.GetNext()
+        head.SetNext(temp.GetNext())
+        temp.SetNext(head)
+        head = temp
+
+        head.GetNext().SetNext(rllp.recursion(head.GetNext().GetNext()))
+        return head</span>
+}
+
+func (rllip *ReverseLinkedListInPairs) IterativeMethod() <span class="cov8" title="1">{
+        var tempOne, tempTwo *SingleLinkedList
+        head := rllip.Head
+        for head != nil &amp;&amp; head.GetNext() != nil </span><span class="cov8" title="1">{
+                if tempOne != nil </span><span class="cov8" title="1">{
+                        tempOne.GetNext().SetNext(head.GetNext())
+                }</span>
+                <span class="cov8" title="1">tempOne = head.GetNext()
+                head.SetNext(head.GetNext().GetNext())
+                tempOne.SetNext(head)
+                if tempTwo == nil </span><span class="cov8" title="1">{
+                        tempTwo = tempOne
+                }</span>
+                <span class="cov8" title="1">head = head.GetNext()</span>
+        }
+        <span class="cov8" title="1">rllip.ReverseHead = tempTwo</span>
+}
+
+func (rllip *ReverseLinkedListInPairs) ExecuteByMethodName(methodName string) <span class="cov8" title="1">{
+        switch methodName </span>{
+        case "RecursiveMethod":<span class="cov8" title="1">
+                rllip.RecursiveMethod()</span>
+        case "IterativeMethod":<span class="cov8" title="1">
+                rllip.IterativeMethod()</span>
+        }
+        <span class="cov8" title="1">rllip.Result = ConvertSingleLinkedListToArray(rllip.ReverseHead)</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package linkedlist
+
+type ReverseSingleLinkedList struct {
+        Head   *SingleLinkedList
+        Result []int
+}
+
+func NewReverseSingleLinkedList(values []int) *ReverseSingleLinkedList <span class="cov8" title="1">{
+        reverseSingleLinkedList := ReverseSingleLinkedList{}
+        for _, value := range values </span><span class="cov8" title="1">{
+                InsertAtEndofSingleLL(&amp;reverseSingleLinkedList.Head, value)
+        }</span>
+        <span class="cov8" title="1">return &amp;reverseSingleLinkedList</span>
+}
+
+/*
+        Time Complexity: O(n), for scanning the list of size n
+        Space Complexity: O(1), for creating a temporary variable.
+*/
+
+func (rsll *ReverseSingleLinkedList) IterativeApproach() <span class="cov8" title="1">{
+        current := rsll.Head
+        var prev *SingleLinkedList
+
+        for current != nil </span><span class="cov8" title="1">{
+                next := current.GetNext()
+                current.SetNext(prev)
+                prev = current
+                current = next
+        }</span>
+
+        <span class="cov8" title="1">rsll.Head = prev</span>
+}
+
+/*
+        Time Complexity: O(n), for scanning the list of size n
+        Space Complexity: O(n), for storing the list in the recursive stack.
+*/
+
+func (rsll *ReverseSingleLinkedList) RecursiveApproach() <span class="cov8" title="1">{
+        rsll.Head = rsll.reverseRecursively(rsll.Head)
+}</span>
+
+func (rsll *ReverseSingleLinkedList) reverseRecursively(head *SingleLinkedList) *SingleLinkedList <span class="cov8" title="1">{
+        if head == nil || head.GetNext() == nil </span><span class="cov8" title="1">{
+                return head
+        }</span>
+        <span class="cov8" title="1">newHead := rsll.reverseRecursively(head.GetNext())
+        head.GetNext().SetNext(head)
+        head.SetNext(nil)
+        return newHead</span>
+}
+
+func (rsll *ReverseSingleLinkedList) ExecuteByName(methodName string) <span class="cov8" title="1">{
+        reverse := map[string]func(){
+                "IterativeApproach": rsll.IterativeApproach,
+                "RecursiveApproach": rsll.RecursiveApproach,
+        }
+        reverse[methodName]()
+        current := rsll.Head
+        rsll.Result = []int{}
+        for current != nil </span><span class="cov8" title="1">{
+                rsll.Result = append(rsll.Result, current.GetData())
+                current = current.GetNext()
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package linkedlist
 
 type SingleLinkedList struct {
         data     int
@@ -918,9 +1397,27 @@ func DeleteAtPositionOfSingleLL(head **SingleLinkedList, position int) <span cla
         }</span>
         <span class="cov8" title="1">currentNode.SetNext(currentNode.GetNext().GetNext())</span>
 }
+
+func ConvertArrayToSingleLinkedList(val []int) *SingleLinkedList <span class="cov8" title="1">{
+        var head *SingleLinkedList
+        for i := len(val) - 1; i &gt;= 0; i-- </span><span class="cov8" title="1">{
+                InsertAtStartofSingleLL(&amp;head, val[i])
+        }</span>
+        <span class="cov8" title="1">return head</span>
+}
+
+func ConvertSingleLinkedListToArray(head *SingleLinkedList) []int <span class="cov8" title="1">{
+        result := []int{}
+        currentNode := head
+        for currentNode != nil </span><span class="cov8" title="1">{
+                result = append(result, currentNode.GetData())
+                currentNode = currentNode.GetNext()
+        }</span>
+        <span class="cov8" title="1">return result</span>
+}
 </pre>
 		
-		<pre class="file" id="file10" style="display: none">package linkedlist
+		<pre class="file" id="file17" style="display: none">package linkedlist
 
 import "errors"
 
@@ -1133,7 +1630,7 @@ func (list *UnrolledLinkedList) Search(o int) int <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file11" style="display: none">/*
+		<pre class="file" id="file18" style="display: none">/*
         Problem-2: Given an array, check whether the array is in sorted order with recursion.
 
         Time Complexity: O(n). Space Complexity: O(݊n) for recursive stack space
@@ -1169,7 +1666,7 @@ func (soa *SortedArray) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file12" style="display: none">/*
+		<pre class="file" id="file19" style="display: none">/*
 Problem-1 Discuss Towers of Hanoi puzzle.
   - Only one disk can be moved at a time.
   - Each move consists of taking the upper disk from one of the stacks and placing it on top of another stack i.e. a disk can only be moved if it is the uppermost disk on a stack.

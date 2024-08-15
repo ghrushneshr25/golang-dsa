@@ -120,3 +120,27 @@ func DeleteFirstNodeOfCircularLinkedList(head **CircularLinkedList) {
 	temp.SetNext((*head).GetNext())
 	*head = (*head).GetNext()
 }
+
+func ConvertArrayToCircularLinkedList(arr []int) *CircularLinkedList {
+	var head *CircularLinkedList
+	for _, v := range arr {
+		InsertAtEndOfCircularLinkedList(&head, v)
+	}
+	return head
+}
+
+func ConvertCircularLinkedListToArray(head *CircularLinkedList) []int {
+	var arr []int
+	if head == nil {
+		return arr
+	}
+	temp := head
+	for {
+		arr = append(arr, temp.GetData())
+		temp = temp.GetNext()
+		if temp == head {
+			break
+		}
+	}
+	return arr
+}
