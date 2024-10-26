@@ -128,6 +128,9 @@ func DeleteAtPositionOfSingleLL(head **SingleLinkedList, position int) {
 }
 
 func ConvertArrayToSingleLinkedList(val []int) *SingleLinkedList {
+	if len(val) == 0 {
+		return nil
+	}
 	var head *SingleLinkedList
 	for i := len(val) - 1; i >= 0; i-- {
 		InsertAtStartofSingleLL(&head, val[i])

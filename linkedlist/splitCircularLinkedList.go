@@ -26,7 +26,7 @@ func (scll *SplitCircularLinkedList) SplitList(head *CircularLinkedList, resultO
 		fastPtr = fastPtr.GetNext()
 	}
 
-	resultOne = &head
+	*resultOne = head
 	if head.GetNext() != head {
 		*resultTwo = slowPtr.GetNext()
 	}

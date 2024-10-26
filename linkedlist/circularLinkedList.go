@@ -130,11 +130,11 @@ func ConvertArrayToCircularLinkedList(arr []int) *CircularLinkedList {
 }
 
 func ConvertCircularLinkedListToArray(head *CircularLinkedList) []int {
-	var arr []int
 	if head == nil {
-		return arr
+		return []int{}
 	}
 	temp := head
+	var arr []int
 	for {
 		arr = append(arr, temp.GetData())
 		temp = temp.GetNext()

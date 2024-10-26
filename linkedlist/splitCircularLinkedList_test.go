@@ -31,6 +31,16 @@ func (scll *SplitCircularLinkedListTestSuite) TestCase() {
 			listOne: []int{1, 2},
 			listTwo: []int{3},
 		},
+		{
+			head:    []int{1},
+			listOne: []int{1},
+			listTwo: []int{},
+		},
+		{
+			head:    []int{},
+			listOne: []int{},
+			listTwo: []int{},
+		},
 	}
 
 	for index, test := range tests {
