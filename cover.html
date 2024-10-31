@@ -123,7 +123,9 @@
 				
 				<option value="file33">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file34">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file34">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				
+				<option value="file35">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2029,8 +2031,9 @@ func (obj *RotateByK) Execute() <span class="cov8" title="1">{
 		<pre class="file" id="file28" style="display: none">package linkedlist
 
 type SingleLinkedList struct {
-        data     int
-        nextNode *SingleLinkedList
+        CustomData interface{}
+        data       int
+        nextNode   *SingleLinkedList
 }
 
 func NewSingleLinkedList(data int) *SingleLinkedList <span class="cov8" title="1">{
@@ -2632,6 +2635,74 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file34" style="display: none">package stack
+
+import (
+        "fmt"
+        "golang-dsa/linkedlist"
+)
+
+type LinkedListStack struct {
+        top    *linkedlist.SingleLinkedList
+        length int
+}
+
+func NewLinkedListStack() *LinkedListStack <span class="cov8" title="1">{
+        return &amp;LinkedListStack{
+                top:    nil,
+                length: 0,
+        }
+}</span>
+
+func (stack *LinkedListStack) IsEmpty() bool <span class="cov8" title="1">{
+        return stack.top == nil
+}</span>
+
+func (stack *LinkedListStack) Size() int <span class="cov8" title="1">{
+        return stack.length
+}</span>
+
+func (stack *LinkedListStack) Push(data interface{}) <span class="cov8" title="1">{
+        node := &amp;linkedlist.SingleLinkedList{
+                CustomData: data,
+        }
+        node.SetNext(stack.top)
+        stack.top = node
+        stack.length++
+}</span>
+
+func (stack *LinkedListStack) Pop() (interface{}, error) <span class="cov8" title="1">{
+        if stack.IsEmpty() </span><span class="cov8" title="1">{
+                return 0, ErrStackEmpty
+        }</span>
+        <span class="cov8" title="1">value := stack.top.CustomData
+        stack.top = stack.top.GetNext()
+        stack.length--
+        return value, nil</span>
+}
+
+func (stack *LinkedListStack) Peek() (interface{}, error) <span class="cov8" title="1">{
+        if stack.IsEmpty() </span><span class="cov8" title="1">{
+                return 0, ErrStackEmpty
+        }</span>
+        <span class="cov8" title="1">return stack.top.CustomData, nil</span>
+}
+
+func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
+        if stack.IsEmpty() </span><span class="cov8" title="1">{
+                return "[]"
+        }</span>
+        <span class="cov8" title="1">var result string
+        temp := stack.top
+
+        for temp != nil </span><span class="cov8" title="1">{
+                result += fmt.Sprintf(" %+v ", temp.CustomData)
+                temp = temp.GetNext()
+        }</span>
+        <span class="cov8" title="1">return "[" + result + "]"</span>
+}
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">package stack
 
 import (
         "errors"

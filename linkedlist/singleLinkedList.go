@@ -1,8 +1,9 @@
 package linkedlist
 
 type SingleLinkedList struct {
-	data     int
-	nextNode *SingleLinkedList
+	CustomData interface{}
+	data       int
+	nextNode   *SingleLinkedList
 }
 
 func NewSingleLinkedList(data int) *SingleLinkedList {
