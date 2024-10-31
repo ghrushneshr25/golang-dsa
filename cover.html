@@ -121,11 +121,13 @@
 				
 				<option value="file32">golang-dsa/recursion/towerOfHanoi.go (100.0%)</option>
 				
-				<option value="file33">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
+				<option value="file33">golang-dsa/stack/balanceParanthesis.go (100.0%)</option>
 				
-				<option value="file34">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file34">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file35">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file35">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				
+				<option value="file36">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2522,7 +2524,79 @@ func (toh *TowerOfHanoi) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file33" style="display: none">package stack
+		<pre class="file" id="file33" style="display: none">/*
+Problem-1 Discuss how stacks can be used for checking balancing of symbols/parentheses.
+
+Solution: Stacks can be used to check whether the given expression has balanced symbols. This algorithm is very useful in compilers. Each
+time the parser reads one character at a time. If the character is an opening delimiter such as (, {, or [- then it is written to the stack. When a
+closing delimiter is encountered like ), }, or ]- the stack is popped.
+
+The opening and closing delimiters are then compared. If they match, the parsing of the string continues. If they do not match, the parser
+indicates that there is an error on the line.
+
+A linear-time O(n) algorithm based on stack can be given as:
+        a) Create a stack.
+        b) while (end of input is not reached) {
+                1) If the character read is not a symbol to be balanced, ignore it.
+                2) If the character is an opening symbol like (, [, {, push it onto the stack
+                3) If it is a closing symbol like ),],}, then if the stack is empty report an error. Otherwise pop the stack.
+                4) If the symbol popped is not the corresponding opening symbol, report an error.
+        }
+        c) At end of input, if the stack is not empty report an error
+
+*/
+
+package stack
+
+type BalanceParanthesis struct {
+        stack  *LinkedListStack
+        Input  string
+        Result bool
+}
+
+func NewBalanceParanthesis(input string) *BalanceParanthesis <span class="cov8" title="1">{
+        return &amp;BalanceParanthesis{
+                stack: NewLinkedListStack(),
+                Input: input,
+        }
+}</span>
+
+func (bp *BalanceParanthesis) IsBalanced() bool <span class="cov8" title="1">{
+
+        pairs := map[rune]rune{
+                ')': '(',
+                '}': '{',
+                ']': '[',
+        }
+
+        if len(bp.Input) == 0 </span><span class="cov8" title="1">{
+                return true
+        }</span>
+
+        <span class="cov8" title="1">for _, c := range bp.Input </span><span class="cov8" title="1">{
+                if c == '(' || c == '{' || c == '[' </span><span class="cov8" title="1">{
+                        bp.stack.Push(c)
+                }</span> else<span class="cov8" title="1"> if c == ')' || c == '}' || c == ']' </span><span class="cov8" title="1">{
+                        pair, err := bp.stack.Peek()
+                        if err != nil </span><span class="cov8" title="1">{
+                                return false
+                        }</span>
+                        <span class="cov8" title="1">if pair.(rune) != pairs[c] </span><span class="cov8" title="1">{
+                                return false
+                        }</span>
+                        <span class="cov8" title="1">bp.stack.Pop()</span>
+                }
+        }
+
+        <span class="cov8" title="1">return bp.stack.IsEmpty()</span>
+}
+
+func (bp *BalanceParanthesis) Execute() <span class="cov8" title="1">{
+        bp.Result = bp.IsBalanced()
+}</span>
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package stack
 
 import (
         "fmt"
@@ -2634,7 +2708,7 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file34" style="display: none">package stack
+		<pre class="file" id="file35" style="display: none">package stack
 
 import (
         "fmt"
@@ -2702,7 +2776,7 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">package stack
+		<pre class="file" id="file36" style="display: none">package stack
 
 import (
         "errors"
