@@ -129,7 +129,9 @@
 				
 				<option value="file36">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file37">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file37">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				
+				<option value="file38">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2897,6 +2899,57 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file37" style="display: none">package stack
+
+type PostFixEvaluation struct {
+        stack      *LinkedListStack
+        expression string
+        Result     int
+}
+
+func NewPostFixEvaluation(expression string) *PostFixEvaluation <span class="cov8" title="1">{
+        return &amp;PostFixEvaluation{
+                stack:      NewLinkedListStack(),
+                expression: expression,
+        }
+}</span>
+
+func (pfe *PostFixEvaluation) Evaluate() int <span class="cov8" title="1">{
+        for _, c := range pfe.expression </span><span class="cov8" title="1">{
+                if c == '+' </span><span class="cov8" title="1">{
+                        op1, _ := pfe.stack.Pop()
+                        op2, _ := pfe.stack.Pop()
+                        res := op1.(int) + op2.(int)
+                        pfe.stack.Push(res)
+                }</span> else<span class="cov8" title="1"> if c == '-' </span><span class="cov8" title="1">{
+                        op1, _ := pfe.stack.Pop()
+                        op2, _ := pfe.stack.Pop()
+                        res := op2.(int) - op1.(int)
+                        pfe.stack.Push(res)
+                }</span> else<span class="cov8" title="1"> if c == '*' </span><span class="cov8" title="1">{
+                        op1, _ := pfe.stack.Pop()
+                        op2, _ := pfe.stack.Pop()
+                        res := op1.(int) * op2.(int)
+                        pfe.stack.Push(res)
+                }</span> else<span class="cov8" title="1"> if c == '/' </span><span class="cov8" title="1">{
+                        op1, _ := pfe.stack.Pop()
+                        op2, _ := pfe.stack.Pop()
+                        res := op2.(int) / op1.(int)
+                        pfe.stack.Push(res)
+                }</span> else<span class="cov8" title="1"> {
+                        pfe.stack.Push(int(c - '0'))
+                }</span>
+        }
+
+        <span class="cov8" title="1">result, _ := pfe.stack.Pop()
+        return result.(int)</span>
+}
+
+func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
+        pfe.Result = pfe.Evaluate()
+}</span>
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package stack
 
 import (
         "errors"
