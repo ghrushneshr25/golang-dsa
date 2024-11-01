@@ -125,13 +125,15 @@
 				
 				<option value="file34">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file35">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
+				<option value="file35">golang-dsa/stack/infixEvaluation.go (18.2%)</option>
 				
-				<option value="file36">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file36">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
 				
-				<option value="file37">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				<option value="file37">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file38">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file38">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				
+				<option value="file39">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2712,7 +2714,119 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">/*
+		<pre class="file" id="file35" style="display: none">package stack
+
+import (
+        "errors"
+        "math"
+        "strconv"
+        "strings"
+)
+
+type InfixEvaluation struct {
+        operator   *LinkedListStack
+        operand    *LinkedListStack
+        Result     int
+        expression string
+        Error      error
+}
+
+func NewInfixEvaluation(expression string) *InfixEvaluation <span class="cov8" title="1">{
+        return &amp;InfixEvaluation{
+                operator:   NewLinkedListStack(),
+                operand:    NewLinkedListStack(),
+                expression: expression,
+        }
+}</span>
+
+func (obj *InfixEvaluation) getPrecendence(op rune) int <span class="cov0" title="0">{
+        switch op </span>{
+        case '+', '-':<span class="cov0" title="0">
+                return 1</span>
+        case '*', '/':<span class="cov0" title="0">
+                return 2</span>
+        case '^':<span class="cov0" title="0">
+                return 3</span>
+        }
+        <span class="cov0" title="0">return 0</span>
+}
+
+func (obj *InfixEvaluation) applyOperator(op rune, b, a int) (int, error) <span class="cov0" title="0">{
+        switch op </span>{
+        case '+':<span class="cov0" title="0">
+                return a + b, nil</span>
+        case '-':<span class="cov0" title="0">
+                return a - b, nil</span>
+        case '*':<span class="cov0" title="0">
+                return a * b, nil</span>
+        case '/':<span class="cov0" title="0">
+                if b == 0 </span><span class="cov0" title="0">{
+                        return 0, errors.New("division by zero")
+                }</span>
+                <span class="cov0" title="0">return a / b, nil</span>
+        case '^':<span class="cov0" title="0">
+                return int(math.Pow(float64(a), float64(b))), nil</span>
+        }
+        <span class="cov0" title="0">return 0, errors.New("invalid operator")</span>
+}
+
+func (obj *InfixEvaluation) Evaluate() (int, error) <span class="cov8" title="1">{
+        tokens := strings.Fields(obj.expression)
+        for _, token := range tokens </span><span class="cov8" title="1">{
+                if token == "(" </span><span class="cov0" title="0">{
+                        obj.operator.Push('(')
+                }</span> else<span class="cov8" title="1"> if token == ")" </span><span class="cov0" title="0">{
+                        for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
+                                top, _ := obj.operator.Pop()
+                                if top.(rune) == '(' </span><span class="cov0" title="0">{
+                                        break</span>
+                                }
+                                <span class="cov0" title="0">op2, _ := obj.operand.Pop()
+                                op1, _ := obj.operand.Pop()
+                                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
+                                if err != nil </span><span class="cov0" title="0">{
+                                        return 0, err
+                                }</span>
+                                <span class="cov0" title="0">obj.operand.Push(result)</span>
+                        }
+                } else<span class="cov8" title="1"> if num, err := strconv.Atoi(token); err == nil </span><span class="cov0" title="0">{
+                        obj.operand.Push(num)
+                }</span> else<span class="cov8" title="1"> if len(token) == 1 &amp;&amp; obj.getPrecendence(rune(token[0])) &gt; 0 </span><span class="cov0" title="0">{
+                        for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
+                                top, _ := obj.operator.Peek()
+                                if obj.getPrecendence(top.(rune)) &lt; obj.getPrecendence(rune(token[0])) </span><span class="cov0" title="0">{
+                                        break</span>
+                                }
+                                <span class="cov0" title="0">top, _ = obj.operator.Pop()
+                                op2, _ := obj.operand.Pop()
+                                op1, _ := obj.operand.Pop()
+                                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
+                                if err != nil </span><span class="cov0" title="0">{
+                                        return 0, err
+                                }</span>
+                                <span class="cov0" title="0">obj.operand.Push(result)</span>
+                        }
+                        <span class="cov0" title="0">obj.operator.Push(rune(token[0]))</span>
+                }
+        }
+
+        <span class="cov8" title="1">for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
+                top, _ := obj.operator.Pop()
+                op2, _ := obj.operand.Pop()
+                op1, _ := obj.operand.Pop()
+                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
+                if err != nil </span><span class="cov0" title="0">{
+                        return 0, err
+                }</span>
+                <span class="cov0" title="0">obj.operand.Push(result)</span>
+        }
+
+        <span class="cov8" title="1">finalResult, _ := obj.operand.Pop()
+        return finalResult.(int), nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">/*
 
 Problem-2 Infix to postfix conversion algorithm using stack.
 
@@ -2830,7 +2944,7 @@ func (itp *InfixToPostFix) isOperator(c rune) bool <span class="cov8" title="1">
 }
 </pre>
 		
-		<pre class="file" id="file36" style="display: none">package stack
+		<pre class="file" id="file37" style="display: none">package stack
 
 import (
         "fmt"
@@ -2898,7 +3012,22 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file37" style="display: none">package stack
+		<pre class="file" id="file38" style="display: none">/*
+        Problem-4: Discuss postfix evaluation using stacks? 
+        Algorithm: 
+                1          Scan the Postfix string from left to right. 
+                2          Initialize an empty stack. 
+                3          Repeat steps 4 and 5 till all the characters are scanned. 
+                4          If the scanned character is an operand, push it onto the stack.  
+                5          If the scanned character is an operator, and if the operator is a unary operator, then pop an element from the stack. 
+                        If the operator is a binary operator, then pop two elements from the stack. After popping the elements, 
+                        apply the operator to those popped elements. Let the result of this operation be retVal onto the stack.  
+                6          After all characters are scanned, we will have only one element in the stack. 
+                7          Return top of the stack as result. 
+
+*/
+
+package stack
 
 type PostFixEvaluation struct {
         stack      *LinkedListStack
@@ -2949,7 +3078,7 @@ func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file38" style="display: none">package stack
+		<pre class="file" id="file39" style="display: none">package stack
 
 import (
         "errors"
