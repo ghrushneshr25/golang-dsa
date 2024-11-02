@@ -125,15 +125,21 @@
 				
 				<option value="file34">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file35">golang-dsa/stack/infixEvaluation.go (18.2%)</option>
+				<option value="file35">golang-dsa/stack/getMinimum.go (100.0%)</option>
 				
 				<option value="file36">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
 				
-				<option value="file37">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file37">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
 				
-				<option value="file38">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				<option value="file38">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file39">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file39">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				
+				<option value="file40">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				
+				<option value="file41">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				
+				<option value="file42">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2714,116 +2720,47 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">package stack
+		<pre class="file" id="file35" style="display: none">/*
+        Problem-6/7 How to design a stack such that getMinimum() should be O(1)?
+         Take an auxiliary stack that maintains the minimum of all values in the stack. 
+         Also, assume that each element of the stack is less than its below elements. 
+         For simplicity let us call the auxiliary stack min stack.   
+*/
 
-import (
-        "errors"
-        "math"
-        "strconv"
-        "strings"
-)
+package stack
 
-type InfixEvaluation struct {
-        operator   *LinkedListStack
-        operand    *LinkedListStack
-        Result     int
-        expression string
-        Error      error
+type GetMinimum struct {
+        input  []int
+        Result int
 }
 
-func NewInfixEvaluation(expression string) *InfixEvaluation <span class="cov8" title="1">{
-        return &amp;InfixEvaluation{
-                operator:   NewLinkedListStack(),
-                operand:    NewLinkedListStack(),
-                expression: expression,
+func NewGetMinimum(input []int) *GetMinimum <span class="cov8" title="1">{
+        return &amp;GetMinimum{
+                input: input,
         }
 }</span>
 
-func (obj *InfixEvaluation) getPrecendence(op rune) int <span class="cov0" title="0">{
-        switch op </span>{
-        case '+', '-':<span class="cov0" title="0">
-                return 1</span>
-        case '*', '/':<span class="cov0" title="0">
-                return 2</span>
-        case '^':<span class="cov0" title="0">
-                return 3</span>
-        }
-        <span class="cov0" title="0">return 0</span>
-}
+func (gm *GetMinimum) GetMinimum() int <span class="cov8" title="1">{
+        minStack := NewLinkedListStack()
 
-func (obj *InfixEvaluation) applyOperator(op rune, b, a int) (int, error) <span class="cov0" title="0">{
-        switch op </span>{
-        case '+':<span class="cov0" title="0">
-                return a + b, nil</span>
-        case '-':<span class="cov0" title="0">
-                return a - b, nil</span>
-        case '*':<span class="cov0" title="0">
-                return a * b, nil</span>
-        case '/':<span class="cov0" title="0">
-                if b == 0 </span><span class="cov0" title="0">{
-                        return 0, errors.New("division by zero")
+        push := func(i int) </span><span class="cov8" title="1">{
+                min, _ := minStack.Peek()
+                if minStack.IsEmpty() || min.(int) &gt; i </span><span class="cov8" title="1">{
+                        minStack.Push(i)
                 }</span>
-                <span class="cov0" title="0">return a / b, nil</span>
-        case '^':<span class="cov0" title="0">
-                return int(math.Pow(float64(a), float64(b))), nil</span>
         }
-        <span class="cov0" title="0">return 0, errors.New("invalid operator")</span>
+
+        <span class="cov8" title="1">for _, i := range gm.input </span><span class="cov8" title="1">{
+                push(i)
+        }</span>
+
+        <span class="cov8" title="1">min, _ := minStack.Peek()
+        return min.(int)</span>
 }
 
-func (obj *InfixEvaluation) Evaluate() (int, error) <span class="cov8" title="1">{
-        tokens := strings.Fields(obj.expression)
-        for _, token := range tokens </span><span class="cov8" title="1">{
-                if token == "(" </span><span class="cov0" title="0">{
-                        obj.operator.Push('(')
-                }</span> else<span class="cov8" title="1"> if token == ")" </span><span class="cov0" title="0">{
-                        for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
-                                top, _ := obj.operator.Pop()
-                                if top.(rune) == '(' </span><span class="cov0" title="0">{
-                                        break</span>
-                                }
-                                <span class="cov0" title="0">op2, _ := obj.operand.Pop()
-                                op1, _ := obj.operand.Pop()
-                                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
-                                if err != nil </span><span class="cov0" title="0">{
-                                        return 0, err
-                                }</span>
-                                <span class="cov0" title="0">obj.operand.Push(result)</span>
-                        }
-                } else<span class="cov8" title="1"> if num, err := strconv.Atoi(token); err == nil </span><span class="cov0" title="0">{
-                        obj.operand.Push(num)
-                }</span> else<span class="cov8" title="1"> if len(token) == 1 &amp;&amp; obj.getPrecendence(rune(token[0])) &gt; 0 </span><span class="cov0" title="0">{
-                        for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
-                                top, _ := obj.operator.Peek()
-                                if obj.getPrecendence(top.(rune)) &lt; obj.getPrecendence(rune(token[0])) </span><span class="cov0" title="0">{
-                                        break</span>
-                                }
-                                <span class="cov0" title="0">top, _ = obj.operator.Pop()
-                                op2, _ := obj.operand.Pop()
-                                op1, _ := obj.operand.Pop()
-                                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
-                                if err != nil </span><span class="cov0" title="0">{
-                                        return 0, err
-                                }</span>
-                                <span class="cov0" title="0">obj.operand.Push(result)</span>
-                        }
-                        <span class="cov0" title="0">obj.operator.Push(rune(token[0]))</span>
-                }
-        }
-
-        <span class="cov8" title="1">for !obj.operator.IsEmpty() </span><span class="cov0" title="0">{
-                top, _ := obj.operator.Pop()
-                op2, _ := obj.operand.Pop()
-                op1, _ := obj.operand.Pop()
-                result, err := obj.applyOperator(top.(rune), op2.(int), op1.(int))
-                if err != nil </span><span class="cov0" title="0">{
-                        return 0, err
-                }</span>
-                <span class="cov0" title="0">obj.operand.Push(result)</span>
-        }
-
-        <span class="cov8" title="1">finalResult, _ := obj.operand.Pop()
-        return finalResult.(int), nil</span>
-}
+func (gm *GetMinimum) Execute() <span class="cov8" title="1">{
+        gm.Result = gm.GetMinimum()
+}</span>
 </pre>
 		
 		<pre class="file" id="file36" style="display: none">/*
@@ -2944,7 +2881,69 @@ func (itp *InfixToPostFix) isOperator(c rune) bool <span class="cov8" title="1">
 }
 </pre>
 		
-		<pre class="file" id="file37" style="display: none">package stack
+		<pre class="file" id="file37" style="display: none">/*
+        Problem-8
+        Given an array of characters formed with a’s and b’s.
+        The string is marked with special character X which represents the
+        middle of the list (for example: ababa…ababXbabab…..baaa).
+        Check whether the string is palindrome.
+
+
+        Algorithm
+        -         Traverse the list till we encounter X as input element.
+        -         During the traversal push all the elements (until X) on to the stack.
+        -         For the second half of the list, compare each element’s content with top of the stack.
+                If they are the same then pop the stack and go to the next element in the input list.
+        -         If they are not the same then the given string is not a palindrome.
+        -         Continue this process until the stack is empty or the string is not a palindrome.
+
+*/
+
+package stack
+
+type IsPalindromeStack struct {
+        stack  *LinkedListStack
+        input  string
+        Result bool
+}
+
+func NewIsPalindromeStack(input string) *IsPalindromeStack <span class="cov8" title="1">{
+        return &amp;IsPalindromeStack{
+                stack:  NewLinkedListStack(),
+                input:  input,
+                Result: false,
+        }
+}</span>
+
+func (obj *IsPalindromeStack) IsPalindrome() bool <span class="cov8" title="1">{
+        i := 0
+        for index, char := range obj.input </span><span class="cov8" title="1">{
+                i = index
+                if char == 'X' </span><span class="cov8" title="1">{
+                        break</span>
+                }
+                <span class="cov8" title="1">obj.stack.Push(char)</span>
+        }
+        <span class="cov8" title="1">i++
+        inputRune := []rune(obj.input)
+        for ; i &lt; len(obj.input); i++ </span><span class="cov8" title="1">{
+                ch, err := obj.stack.Pop()
+                if err != nil </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+                <span class="cov8" title="1">if ch.(rune) != inputRune[i] </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func (obj *IsPalindromeStack) Execute() <span class="cov8" title="1">{
+        obj.Result = obj.IsPalindrome()
+}</span>
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package stack
 
 import (
         "fmt"
@@ -3012,7 +3011,7 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file38" style="display: none">/*
+		<pre class="file" id="file39" style="display: none">/*
         Problem-4: Discuss postfix evaluation using stacks? 
         Algorithm: 
                 1          Scan the Postfix string from left to right. 
@@ -3078,7 +3077,7 @@ func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file39" style="display: none">package stack
+		<pre class="file" id="file40" style="display: none">package stack
 
 import (
         "errors"
@@ -3164,6 +3163,142 @@ func (obj *FixedSizeArrayStack) ToString() string <span class="cov8" title="1">{
                 str = fmt.Sprintf("%+v , %+v", str, obj.stack[i])
         }</span>
         <span class="cov8" title="1">return fmt.Sprintf("[%+v]", str)</span>
+}
+</pre>
+		
+		<pre class="file" id="file41" style="display: none">/*
+Problem-11
+        Given a stack, how to reverse the contents of the stack using only stack operations (push and pop)?
+Algorithm
+- First pop all the elements of the stack till it becomes empty.
+- For each upward step in recursion, insert the element at the bottom of the stack.
+*/
+
+package stack
+
+type StackReversal struct {
+        stack  *LinkedListStack
+        Result []int
+}
+
+func NewStackReversal(values []int) *StackReversal <span class="cov8" title="1">{
+        stack := NewLinkedListStack()
+        for _, value := range values </span><span class="cov8" title="1">{
+                stack.Push(value)
+        }</span>
+        <span class="cov8" title="1">return &amp;StackReversal{
+                stack:  stack,
+                Result: []int{},
+        }</span>
+}
+
+func (sr *StackReversal) ReverseStack() <span class="cov8" title="1">{
+        temp, err := sr.stack.Pop()
+        if err != nil </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">sr.ReverseStack()
+        sr.InsertAtBottom(temp)</span>
+}
+
+func (sr *StackReversal) InsertAtBottom(item interface{}) <span class="cov8" title="1">{
+        if sr.stack.IsEmpty() </span><span class="cov8" title="1">{
+                sr.stack.Push(item)
+                return
+        }</span>
+        <span class="cov8" title="1">temp, _ := sr.stack.Pop()
+        sr.InsertAtBottom(item)
+        sr.stack.Push(temp)</span>
+}
+
+func (sr *StackReversal) Execute() <span class="cov8" title="1">{
+        sr.ReverseStack()
+        for !sr.stack.IsEmpty() </span><span class="cov8" title="1">{
+                item, _ := sr.stack.Pop()
+                sr.Result = append(sr.Result, item.(int))
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file42" style="display: none">package stack
+
+import "errors"
+
+var (
+        ErrInvalidStackId = errors.New("InvalidStackId")
+)
+
+type TwoStackWithOneArray struct {
+        stack  []int
+        size   int
+        topOne int
+        topTwo int
+}
+
+func NewTwoStackWithOneArray(size int) *TwoStackWithOneArray <span class="cov8" title="1">{
+        return &amp;TwoStackWithOneArray{
+                stack:  make([]int, size),
+                size:   size,
+                topOne: -1,
+                topTwo: size,
+        }
+}</span>
+
+func (s *TwoStackWithOneArray) Push(stackId, value int) error <span class="cov8" title="1">{
+        if s.topOne+1 == s.topTwo </span><span class="cov8" title="1">{
+                return ErrStackFull
+        }</span>
+        <span class="cov8" title="1">if stackId == 1 </span><span class="cov8" title="1">{
+                s.topOne++
+                s.stack[s.topOne] = value
+        }</span> else<span class="cov8" title="1"> if stackId == 2 </span><span class="cov8" title="1">{
+                s.topTwo--
+                s.stack[s.topTwo] = value
+        }</span> else<span class="cov8" title="1"> {
+                return ErrInvalidStackId
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *TwoStackWithOneArray) Pop(stackId int) (int, error) <span class="cov8" title="1">{
+        if stackId == 1 </span><span class="cov8" title="1">{
+                if s.topOne == -1 </span><span class="cov8" title="1">{
+                        return 0, ErrStackEmpty
+                }</span>
+                <span class="cov8" title="1">value := s.stack[s.topOne]
+                s.topOne--
+                return value, nil</span>
+        } else<span class="cov8" title="1"> if stackId == 2 </span><span class="cov8" title="1">{
+                if s.topTwo == s.size </span><span class="cov8" title="1">{
+                        return 0, ErrStackEmpty
+                }</span>
+                <span class="cov8" title="1">value := s.stack[s.topTwo]
+                s.topTwo++
+                return value, nil</span>
+        }
+        <span class="cov8" title="1">return 0, ErrInvalidStackId</span>
+}
+
+func (s *TwoStackWithOneArray) Peek(stackId int) (int, error) <span class="cov8" title="1">{
+        if stackId == 1 </span><span class="cov8" title="1">{
+                if s.topOne == -1 </span><span class="cov8" title="1">{
+                        return 0, ErrStackEmpty
+                }</span>
+                <span class="cov8" title="1">return s.stack[s.topOne], nil</span>
+        } else<span class="cov8" title="1"> if stackId == 2 </span><span class="cov8" title="1">{
+                if s.topTwo == s.size </span><span class="cov8" title="1">{
+                        return 0, ErrStackEmpty
+                }</span>
+                <span class="cov8" title="1">return s.stack[s.topTwo], nil</span>
+        }
+        <span class="cov8" title="1">return 0, ErrInvalidStackId</span>
+}
+
+func (s *TwoStackWithOneArray) IsEmpty(stackId int) bool <span class="cov8" title="1">{
+        if stackId == 1 </span><span class="cov8" title="1">{
+                return s.topOne == -1
+        }</span>
+        <span class="cov8" title="1">return s.topTwo == s.size</span>
 }
 </pre>
 		
