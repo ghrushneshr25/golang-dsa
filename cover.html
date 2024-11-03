@@ -121,25 +121,27 @@
 				
 				<option value="file32">golang-dsa/recursion/towerOfHanoi.go (100.0%)</option>
 				
-				<option value="file33">golang-dsa/stack/balanceParanthesis.go (100.0%)</option>
+				<option value="file33">golang-dsa/stack/admissibleString.go (100.0%)</option>
 				
-				<option value="file34">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
+				<option value="file34">golang-dsa/stack/balanceParanthesis.go (100.0%)</option>
 				
-				<option value="file35">golang-dsa/stack/getMinimum.go (100.0%)</option>
+				<option value="file35">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file36">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
+				<option value="file36">golang-dsa/stack/getMinimum.go (100.0%)</option>
 				
-				<option value="file37">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
+				<option value="file37">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
 				
-				<option value="file38">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file38">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
 				
-				<option value="file39">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				<option value="file39">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file40">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file40">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
 				
-				<option value="file41">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				<option value="file41">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
-				<option value="file42">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
+				<option value="file42">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				
+				<option value="file43">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2537,6 +2539,47 @@ func (toh *TowerOfHanoi) Execute() <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file33" style="display: none">/*
+        Problem-21
+        Given a string containing D D′D and D D′D where D indicates a push operation and D indicates
+        a pop operation, and with the stack initially empty, formulate a rule to check whether a given
+        string D of operations is admissible or not?
+*/
+
+package stack
+
+type AdmissibleString struct {
+        stack  *LinkedListStack
+        input  string
+        Result bool
+}
+
+func NewAdmissibleString(input string) *AdmissibleString <span class="cov8" title="1">{
+        return &amp;AdmissibleString{
+                stack: NewLinkedListStack(),
+                input: input,
+        }
+}</span>
+
+func (s *AdmissibleString) IsAdmissible() bool <span class="cov8" title="1">{
+        for _, char := range s.input </span><span class="cov8" title="1">{
+                if char == 'S' </span><span class="cov8" title="1">{
+                        s.stack.Push(char)
+                }</span> else<span class="cov8" title="1"> {
+                        _, err := s.stack.Pop()
+                        if err != nil </span><span class="cov8" title="1">{
+                                return false
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func (s *AdmissibleString) Execute() <span class="cov8" title="1">{
+        s.Result = s.IsAdmissible()
+}</span>
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">/*
 Problem-1 Discuss how stacks can be used for checking balancing of symbols/parentheses.
 
 Solution: Stacks can be used to check whether the given expression has balanced symbols. This algorithm is very useful in compilers. Each
@@ -2608,7 +2651,7 @@ func (bp *BalanceParanthesis) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file34" style="display: none">package stack
+		<pre class="file" id="file35" style="display: none">package stack
 
 import (
         "fmt"
@@ -2720,7 +2763,7 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">/*
+		<pre class="file" id="file36" style="display: none">/*
         Problem-6/7 How to design a stack such that getMinimum() should be O(1)?
          Take an auxiliary stack that maintains the minimum of all values in the stack. 
          Also, assume that each element of the stack is less than its below elements. 
@@ -2763,7 +2806,7 @@ func (gm *GetMinimum) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file36" style="display: none">/*
+		<pre class="file" id="file37" style="display: none">/*
 
 Problem-2 Infix to postfix conversion algorithm using stack.
 
@@ -2881,7 +2924,7 @@ func (itp *InfixToPostFix) isOperator(c rune) bool <span class="cov8" title="1">
 }
 </pre>
 		
-		<pre class="file" id="file37" style="display: none">/*
+		<pre class="file" id="file38" style="display: none">/*
         Problem-8
         Given an array of characters formed with a’s and b’s.
         The string is marked with special character X which represents the
@@ -2943,7 +2986,7 @@ func (obj *IsPalindromeStack) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file38" style="display: none">package stack
+		<pre class="file" id="file39" style="display: none">package stack
 
 import (
         "fmt"
@@ -3011,7 +3054,7 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file39" style="display: none">/*
+		<pre class="file" id="file40" style="display: none">/*
         Problem-4: Discuss postfix evaluation using stacks? 
         Algorithm: 
                 1          Scan the Postfix string from left to right. 
@@ -3077,7 +3120,7 @@ func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file40" style="display: none">package stack
+		<pre class="file" id="file41" style="display: none">package stack
 
 import (
         "errors"
@@ -3166,7 +3209,7 @@ func (obj *FixedSizeArrayStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file41" style="display: none">/*
+		<pre class="file" id="file42" style="display: none">/*
 Problem-11
         Given a stack, how to reverse the contents of the stack using only stack operations (push and pop)?
 Algorithm
@@ -3220,7 +3263,7 @@ func (sr *StackReversal) Execute() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file42" style="display: none">package stack
+		<pre class="file" id="file43" style="display: none">package stack
 
 import "errors"
 
