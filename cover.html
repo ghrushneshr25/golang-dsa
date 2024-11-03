@@ -135,15 +135,17 @@
 				
 				<option value="file39">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
 				
-				<option value="file40">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file40">golang-dsa/stack/largestAreaOfHistogram.go (100.0%)</option>
 				
-				<option value="file41">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				<option value="file41">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file42">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file42">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
 				
-				<option value="file43">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				<option value="file43">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
-				<option value="file44">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
+				<option value="file44">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				
+				<option value="file45">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -3067,7 +3069,89 @@ func (obj *IsPalindromeStack) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file40" style="display: none">package stack
+		<pre class="file" id="file40" style="display: none">/*
+        Problem-25
+                Largest rectangle under histogram: A histogram is a polygon composed of a sequence of rectangles
+                aligned at a common base line. For simplicity, assume that the rectangles have equal widths but
+                may have different heights. For example, the figure on the left  shows a histogram that consists
+                of rectangles with the heights 3,2 ,5,6,1,4,4, measured in units where 1 is the width of the
+                rectangles. Here our problem is: given an array with heights of rectangles (assuming width is 1),
+                we need to find the largest rectangle possible. For the given example, the largest rectangle
+                is the shared part.
+
+        Linear search using a stack of incomplete subproblems: There are many ways of solving this problem.
+        Judge has given a nice algorithm for this problem which is based on stack. We process the elements
+        in left-to-right order and maintain a stack of information about started but yet unfinished sub
+        histograms. If the stack is empty, open a new subproblem by pushing the element onto the stack.
+        Otherwise compare it to the element on top of the stack. If the new one is greater we again push it.
+        If the new one is equal we skip it. In all these cases, we continue with the next new element.
+
+        If the new one is less, we finish the topmost subproblem by updating the maximum area with respect to the element at the top of the stack.
+        Then, we discard the element at the top, and repeat the procedure keeping the current new element. This way, all subproblems are finished
+        when the stack becomes empty, or its top element is less than or equal to the new element, leading to the actions described above. If all
+        elements have been processed, and the stack is not yet empty, we finish the remaining subproblems by updating the maximum area with
+        respect to the elements at the top.
+
+        Space Complexity: O(n)
+        Time Complexity: O(n)
+*/
+
+package stack
+
+type MaxAreaOfHistogram struct {
+        stack  *LinkedListStack
+        input  []int
+        Result int
+}
+
+func NewMaxAreaOfHistogram(input []int) *MaxAreaOfHistogram <span class="cov8" title="1">{
+        return &amp;MaxAreaOfHistogram{
+                stack: NewLinkedListStack(),
+                input: input,
+        }
+}</span>
+
+func (f *MaxAreaOfHistogram) Execute() <span class="cov8" title="1">{
+        f.Result = f.maxArea()
+}</span>
+
+func (f *MaxAreaOfHistogram) maxArea() int <span class="cov8" title="1">{
+        if len(f.input) == 0 </span><span class="cov8" title="1">{
+                return 0
+        }</span>
+
+        <span class="cov8" title="1">maxArea, i := 0, 0
+        for i &lt; len(f.input) </span><span class="cov8" title="1">{
+                peek, _ := f.stack.Peek()
+                if f.stack.IsEmpty() || f.input[i] &gt;= f.input[peek.(int)] </span><span class="cov8" title="1">{
+                        f.stack.Push(i)
+                        i++
+                }</span> else<span class="cov8" title="1"> {
+                        top, _ := f.stack.Pop()
+                        width := i
+                        if !f.stack.IsEmpty() </span><span class="cov8" title="1">{
+                                peek, _ := f.stack.Peek()
+                                width = i - peek.(int) - 1
+                        }</span>
+                        <span class="cov8" title="1">maxArea = max(maxArea, f.input[top.(int)]*width)</span>
+                }
+        }
+
+        <span class="cov8" title="1">for !f.stack.IsEmpty() </span><span class="cov8" title="1">{
+                top, _ := f.stack.Pop()
+                width := i
+                if !f.stack.IsEmpty() </span><span class="cov8" title="1">{
+                        peek, _ := f.stack.Peek()
+                        width = i - peek.(int) - 1
+                }</span>
+                <span class="cov8" title="1">maxArea = max(maxArea, f.input[top.(int)]*width)</span>
+        }
+
+        <span class="cov8" title="1">return maxArea</span>
+}
+</pre>
+		
+		<pre class="file" id="file41" style="display: none">package stack
 
 import (
         "fmt"
@@ -3135,7 +3219,7 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file41" style="display: none">/*
+		<pre class="file" id="file42" style="display: none">/*
         Problem-4: Discuss postfix evaluation using stacks? 
         Algorithm: 
                 1          Scan the Postfix string from left to right. 
@@ -3201,7 +3285,7 @@ func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file42" style="display: none">package stack
+		<pre class="file" id="file43" style="display: none">package stack
 
 import (
         "errors"
@@ -3290,7 +3374,7 @@ func (obj *FixedSizeArrayStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file43" style="display: none">/*
+		<pre class="file" id="file44" style="display: none">/*
 Problem-11
         Given a stack, how to reverse the contents of the stack using only stack operations (push and pop)?
 Algorithm
@@ -3344,7 +3428,7 @@ func (sr *StackReversal) Execute() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file44" style="display: none">package stack
+		<pre class="file" id="file45" style="display: none">package stack
 
 import "errors"
 
