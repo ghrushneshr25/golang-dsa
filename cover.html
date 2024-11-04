@@ -147,7 +147,9 @@
 				
 				<option value="file45">golang-dsa/stack/stackReversal.go (100.0%)</option>
 				
-				<option value="file46">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
+				<option value="file46">golang-dsa/stack/stackSet.go (100.0%)</option>
+				
+				<option value="file47">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -3481,7 +3483,80 @@ func (sr *StackReversal) Execute() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file46" style="display: none">package stack
+		<pre class="file" id="file46" style="display: none">/*
+        Problem-29         If the stack gets too high, it might overbalance.
+                                There-fore, in real life, we would likely start a new stack when the previous
+                                stack exceeds some threshold.  Implement a data structure that mimics this
+                                and composed of several stacks, and should create a new stack
+                                once the previous one exceeds capacity.
+                                push() and pop() of this class should behave identically to a regular stack.
+*/
+
+package stack
+
+type StackForStackSets struct {
+        stacks   []*FixedSizeArrayStack
+        capacity int
+}
+
+func NewStackForStackSets(capacity int) *StackForStackSets <span class="cov8" title="1">{
+        newStack := NewFixedSizeArrayStackWithCapacity(capacity)
+        return &amp;StackForStackSets{
+                stacks:   []*FixedSizeArrayStack{newStack},
+                capacity: capacity,
+        }
+}</span>
+
+func (s *StackForStackSets) getLastStack() *FixedSizeArrayStack <span class="cov8" title="1">{
+        return s.stacks[len(s.stacks)-1]
+}</span>
+
+func (s *StackForStackSets) Push(value int) error <span class="cov8" title="1">{
+        lastStack := s.getLastStack()
+        if lastStack.IsFull() </span><span class="cov8" title="1">{
+                newStack := NewFixedSizeArrayStackWithCapacity(s.capacity)
+                newStack.Push(value)
+                s.stacks = append(s.stacks, newStack)
+        }</span> else<span class="cov8" title="1"> {
+                lastStack.Push(value)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *StackForStackSets) Pop() (int, error) <span class="cov8" title="1">{
+        lastStack := s.getLastStack()
+        value, err := lastStack.Pop()
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, err
+        }</span>
+        <span class="cov8" title="1">if lastStack.IsEmpty() &amp;&amp; len(s.stacks) &gt; 1 </span><span class="cov8" title="1">{
+                s.stacks = s.stacks[:len(s.stacks)-1]
+        }</span>
+
+        <span class="cov8" title="1">return value, nil</span>
+}
+
+func (s *StackForStackSets) getNthStack(n int) *FixedSizeArrayStack <span class="cov8" title="1">{
+        if n &lt; 0 || n &gt;= len(s.stacks) </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+        <span class="cov8" title="1">return s.stacks[n]</span>
+}
+
+func (s *StackForStackSets) PopFromNth(n int) (int, error) <span class="cov8" title="1">{
+        stack := s.getNthStack(n)
+        if stack == nil </span><span class="cov8" title="1">{
+                return 0, ErrInvalidStackId
+        }</span>
+        <span class="cov8" title="1">value, _ := stack.Pop()
+        if stack.IsEmpty() </span><span class="cov8" title="1">{
+                s.stacks = append(s.stacks[:n], s.stacks[n+1:]...)
+        }</span>
+        <span class="cov8" title="1">return value, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file47" style="display: none">package stack
 
 import "errors"
 
