@@ -123,29 +123,31 @@
 				
 				<option value="file33">golang-dsa/stack/admissibleString.go (100.0%)</option>
 				
-				<option value="file34">golang-dsa/stack/balanceParanthesis.go (100.0%)</option>
+				<option value="file34">golang-dsa/stack/ascendingOrderStack.go (100.0%)</option>
 				
-				<option value="file35">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
+				<option value="file35">golang-dsa/stack/balanceParanthesis.go (100.0%)</option>
 				
-				<option value="file36">golang-dsa/stack/findingOfSpans.go (100.0%)</option>
+				<option value="file36">golang-dsa/stack/dynamicArrayStackImplementation.go (100.0%)</option>
 				
-				<option value="file37">golang-dsa/stack/getMinimum.go (100.0%)</option>
+				<option value="file37">golang-dsa/stack/findingOfSpans.go (100.0%)</option>
 				
-				<option value="file38">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
+				<option value="file38">golang-dsa/stack/getMinimum.go (100.0%)</option>
 				
-				<option value="file39">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
+				<option value="file39">golang-dsa/stack/infixToPostFix.go (100.0%)</option>
 				
-				<option value="file40">golang-dsa/stack/largestAreaOfHistogram.go (100.0%)</option>
+				<option value="file40">golang-dsa/stack/isPallindromeWithX.go (100.0%)</option>
 				
-				<option value="file41">golang-dsa/stack/linkedListStack.go (100.0%)</option>
+				<option value="file41">golang-dsa/stack/largestAreaOfHistogram.go (100.0%)</option>
 				
-				<option value="file42">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
+				<option value="file42">golang-dsa/stack/linkedListStack.go (100.0%)</option>
 				
-				<option value="file43">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
+				<option value="file43">golang-dsa/stack/postFixEvaluation.go (100.0%)</option>
 				
-				<option value="file44">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				<option value="file44">golang-dsa/stack/simpleArrayImplementation.go (100.0%)</option>
 				
-				<option value="file45">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
+				<option value="file45">golang-dsa/stack/stackReversal.go (100.0%)</option>
+				
+				<option value="file46">golang-dsa/stack/twoStackWithOneArray.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -2584,6 +2586,57 @@ func (s *AdmissibleString) Execute() <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file34" style="display: none">/*
+        Problem-26
+                                Give an algorithm for sorting a stack in ascending order.
+                                We should not make any assumptions about how the stack is implemented.
+
+        Time Complexity: O(n^2).
+        Space Complexity: O(n), for stack.
+*/
+
+package stack
+
+type AscendingOrderStack struct {
+        inputStack *LinkedListStack
+        Result     *LinkedListStack
+}
+
+func NewAscendingOrderStack(input []int) *AscendingOrderStack <span class="cov8" title="1">{
+        inputStack := NewLinkedListStack()
+        index := len(input) - 1
+        for index &gt;= 0 </span><span class="cov8" title="1">{
+                inputStack.Push(input[index])
+                index--
+        }</span>
+        <span class="cov8" title="1">return &amp;AscendingOrderStack{
+                inputStack: inputStack,
+        }</span>
+}
+
+func (obj *AscendingOrderStack) sortStack() *LinkedListStack <span class="cov8" title="1">{
+        rstk := NewLinkedListStack()
+        for !obj.inputStack.IsEmpty() </span><span class="cov8" title="1">{
+                temp, _ := obj.inputStack.Pop()
+                for !rstk.IsEmpty() </span><span class="cov8" title="1">{
+                        peek, _ := rstk.Peek()
+                        if peek.(int) &gt; temp.(int) </span><span class="cov8" title="1">{
+                                pop, _ := rstk.Pop()
+                                obj.inputStack.Push(pop)
+                        }</span> else<span class="cov8" title="1"> {
+                                break</span>
+                        }
+                }
+                <span class="cov8" title="1">rstk.Push(temp)</span>
+        }
+        <span class="cov8" title="1">return rstk</span>
+}
+
+func (obj *AscendingOrderStack) Execute() <span class="cov8" title="1">{
+        obj.Result = obj.sortStack()
+}</span>
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">/*
 Problem-1 Discuss how stacks can be used for checking balancing of symbols/parentheses.
 
 Solution: Stacks can be used to check whether the given expression has balanced symbols. This algorithm is very useful in compilers. Each
@@ -2655,7 +2708,7 @@ func (bp *BalanceParanthesis) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file35" style="display: none">package stack
+		<pre class="file" id="file36" style="display: none">package stack
 
 import (
         "fmt"
@@ -2767,7 +2820,7 @@ func (s *DynamicArrayStack) shrink() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file36" style="display: none">/*
+		<pre class="file" id="file37" style="display: none">/*
         Problem 22
         The problem is about finding the "span" for each element in an array ( A ). Let's break down the problem into parts to understand it more clearly.
 
@@ -2846,7 +2899,7 @@ func (f *FindingOfSpans) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file37" style="display: none">/*
+		<pre class="file" id="file38" style="display: none">/*
         Problem-6/7 How to design a stack such that getMinimum() should be O(1)?
          Take an auxiliary stack that maintains the minimum of all values in the stack. 
          Also, assume that each element of the stack is less than its below elements. 
@@ -2889,7 +2942,7 @@ func (gm *GetMinimum) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file38" style="display: none">/*
+		<pre class="file" id="file39" style="display: none">/*
 
 Problem-2 Infix to postfix conversion algorithm using stack.
 
@@ -3007,7 +3060,7 @@ func (itp *InfixToPostFix) isOperator(c rune) bool <span class="cov8" title="1">
 }
 </pre>
 		
-		<pre class="file" id="file39" style="display: none">/*
+		<pre class="file" id="file40" style="display: none">/*
         Problem-8
         Given an array of characters formed with a’s and b’s.
         The string is marked with special character X which represents the
@@ -3069,7 +3122,7 @@ func (obj *IsPalindromeStack) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file40" style="display: none">/*
+		<pre class="file" id="file41" style="display: none">/*
         Problem-25
                 Largest rectangle under histogram: A histogram is a polygon composed of a sequence of rectangles
                 aligned at a common base line. For simplicity, assume that the rectangles have equal widths but
@@ -3151,7 +3204,7 @@ func (f *MaxAreaOfHistogram) maxArea() int <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file41" style="display: none">package stack
+		<pre class="file" id="file42" style="display: none">package stack
 
 import (
         "fmt"
@@ -3219,7 +3272,7 @@ func (stack *LinkedListStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file42" style="display: none">/*
+		<pre class="file" id="file43" style="display: none">/*
         Problem-4: Discuss postfix evaluation using stacks? 
         Algorithm: 
                 1          Scan the Postfix string from left to right. 
@@ -3285,7 +3338,7 @@ func (pfe *PostFixEvaluation) Execute() <span class="cov8" title="1">{
 }</span>
 </pre>
 		
-		<pre class="file" id="file43" style="display: none">package stack
+		<pre class="file" id="file44" style="display: none">package stack
 
 import (
         "errors"
@@ -3374,7 +3427,7 @@ func (obj *FixedSizeArrayStack) ToString() string <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file44" style="display: none">/*
+		<pre class="file" id="file45" style="display: none">/*
 Problem-11
         Given a stack, how to reverse the contents of the stack using only stack operations (push and pop)?
 Algorithm
@@ -3428,7 +3481,7 @@ func (sr *StackReversal) Execute() <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file45" style="display: none">package stack
+		<pre class="file" id="file46" style="display: none">package stack
 
 import "errors"
 
